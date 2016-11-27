@@ -4,25 +4,21 @@
 
 import * as React from 'react';
 
-class componentName extends React.Component<{}, {}> {
+class NavBar extends React.Component<{}, {}> {
     public render() {
         return (
-            <nav className='pt-navbar pt-fixed-top'>
+            <nav className='pt-navbar pt-dark pt-fixed-top'>
                 <div className='pt-navbar-group pt-align-left'>
-                    <div className='pt-navbar-heading'>Blueprint</div>
-                    <input className='pt-input' placeholder='Search files...' type='text' />
+                    <div className='pt-navbar-heading'>React Slate</div>
                 </div>
                 <div className='pt-navbar-group pt-align-right'>
-                    <button className='pt-button pt-minimal pt-icon-home'>Home</button>
-                    <button className='pt-button pt-minimal pt-icon-document'>Files</button>
-                    <span className='pt-navbar-divider'></span>
-                    <button className='pt-button pt-minimal pt-icon-user'></button>
-                    <button className='pt-button pt-minimal pt-icon-notifications'></button>
-                    <button className='pt-button pt-minimal pt-icon-cog'></button>
+                    <button className="pt-button pt-minimal pt-icon-page-layout">http://localhost:9000</button>
+                    <span className="pt-navbar-divider" />
+                    <button className='pt-button pt-minimal pt-icon-cog' />
                 </div>
             </nav>
         );
     }
 }
 
-export default componentName;
+export default NavBar;

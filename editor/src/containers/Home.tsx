@@ -14,9 +14,9 @@ const { DragDropContext } = require('react-dnd');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const Html5Backend = require('react-dnd-html5-backend');
 import ComponentsPanel from '../components/componentsPanel';
+import InsightPanel from '../components/insightPanel';
 import { EditorSession } from '../stores/EditorSessionStore';
 import { ComponentStore } from '../stores/ComponentStore';
-import KnobFloater from '../components/knobFloater';
 
 interface IHomeProps {
     editorSessionStore?: EditorSession;
@@ -42,13 +42,13 @@ export default class Home extends React.Component<IHomeProps, {}> {
                     <NavBar />
                 </div>
                 <div className='row' style={{marginTop: '50px'}}>
-                    <div className='col-md-4'>
+                    <div className='col-md-2'>
                         <ComponentsPanel
                             components={this.props.componentStore.componentsKit.components}
                             onDropped={this.onComponentDroppedOnEditor}
                         />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-8'>
                         <Editor
                             ref={editor => this.editor = editor}
                             onChange={editorSessionStore.setCode}
@@ -59,8 +59,8 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             knob={editorSessionStore.knob.knob}
                         />
                     </div>
-                    <div className='col-md-4'>
-                        <Preview />
+                    <div className='col-md-2'>
+                        <InsightPanel />
                     </div>
                 </div>
             </div>

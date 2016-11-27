@@ -8,13 +8,14 @@ import 'brace';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const AceEditor = require('react-ace').default;
 import 'brace/mode/jsx';
-import 'brace/theme/monokai';
+import 'brace/theme/chaos';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const { DropTarget } = require('react-dnd');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const client = require('../../../../lib/middleMan/client');
 import { observer } from 'mobx-react';
 import KnobFloater from '../knobFloater';
+import './style.scss';
 
 interface ISequencePanelProps {
     connectDropTarget?: any;
@@ -85,16 +86,18 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
     public render() {
         const { connectDropTarget } = this.props;
         return connectDropTarget(
-            <div >
+            <div style={{position: 'relative', height: '82vh', width: '100%'}}>
                 <AceEditor
                     ref={editor => this.editor = editor}
                     mode='jsx'
-                    theme='monokai'
+                    theme='chaos'
                     name='UNIQUE_ID_OF_DIV'
                     editorProps={{$blockScrolling: true}}
                     onChange={this.props.onChange}
                     value={this.props.code}
                     fontSize={14}
+                    height='inherit'
+                    width='inherit'
                 />
                 <KnobFloater
                     location={this.state}
