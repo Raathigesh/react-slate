@@ -48,7 +48,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             onDropped={this.onComponentDroppedOnEditor}
                         />
                     </div>
-                    <div className='col-md-8'>
+                    <div className='col-md-6'>
                         <Editor
                             ref={editor => this.editor = editor}
                             onChange={editorSessionStore.setCode}
@@ -59,7 +59,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             knob={editorSessionStore.knob.knob}
                         />
                     </div>
-                    <div className='col-md-2'>
+                    <div className='col-md-4'>
                         <InsightPanel />
                     </div>
                 </div>

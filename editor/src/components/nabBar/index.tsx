@@ -12,8 +12,8 @@ class NavBar extends React.Component<{}, {}> {
                     <div className='pt-navbar-heading'>React Slate</div>
                 </div>
                 <div className='pt-navbar-group pt-align-right'>
-                    <button className="pt-button pt-minimal pt-icon-page-layout">http://localhost:9000</button>
-                    <span className="pt-navbar-divider" />
+                    <button className='pt-button pt-minimal pt-icon-page-layout'>http://localhost:9000</button>
+                    <span className='pt-navbar-divider' />
                     <button className='pt-button pt-minimal pt-icon-cog' />
                 </div>
             </nav>

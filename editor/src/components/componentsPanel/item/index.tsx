@@ -40,11 +40,10 @@ export default class ComponentItem extends React.Component<IActionMiniProps, {}>
     public render() {
         const { connectDragSource } = this.props;
         return connectDragSource(
-            <div className='pt-card pt-elevation-0 pt-interactive slate-component-item'>
-                <h5>
-                    {this.props.detail.name}{' '}
-                    <span className='pt-icon-standard pt-icon-document-open' title='Open component documentation'/>
-                </h5>
+            <div className='pt-card pt-elevation-0 pt-interactive slate-component-item' style={{height: '65px', padding: '11px'}}>
+                <h6>
+                    {this.props.detail.name}
+                </h6>
                 <p>{this.props.detail.description}</p>
             </div>
         );

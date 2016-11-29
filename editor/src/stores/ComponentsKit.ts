@@ -16,6 +16,24 @@ export default class ComponentsKit {
             props: '',
             importStatement: 'import { Button } from \'react-roolbox\'',
             code: '<Button />'
+        }, {
+            name: 'Header',
+            description: 'A Button component',
+            props: '',
+            importStatement: 'import { Button } from \'react-roolbox\'',
+            code: '<Button />'
+        }, {
+            name: 'Footer',
+            description: 'A Button component',
+            props: '',
+            importStatement: 'import { Button } from \'react-roolbox\'',
+            code: '<Button />'
+        }, {
+            name: 'Modal',
+            description: 'A Button component',
+            props: '',
+            importStatement: 'import { Button } from \'react-roolbox\'',
+            code: '<Button />'
         }]);
     }
 }
