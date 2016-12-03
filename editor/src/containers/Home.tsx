@@ -31,7 +31,8 @@ export default class Home extends React.Component<IHomeProps, {}> {
     public editor: any;
 
     public onComponentDroppedOnEditor = (detail: any) => {
-        this.editor.handler.component.insertInCursor(detail.code);
+        this.editor.handler.component.insertInCursor(this.props.editorSessionStore.getComponentSnippet(detail));
+        this.props.editorSessionStore.addImport(detail.exported);
     }
 
     public render() {

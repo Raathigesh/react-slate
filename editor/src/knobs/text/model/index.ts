@@ -8,7 +8,7 @@ import { getInitialValue } from '../nodeManipulator';
 export default class TextKonb {
     @observable public text: string;
 
-    constructor(node) {        
+    constructor(node) {
         this.text = getInitialValue(node);
     }
 

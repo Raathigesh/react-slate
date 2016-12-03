@@ -18,8 +18,8 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
         });
 
         return (
-            <div className='pt-card' style={{height: '100%'}}>
-                <div className='pt-input-group' style={{marginBottom: '10px'}}>
+            <div className='pt-card' style={{ height: '100%' }}>
+                <div className='pt-input-group' style={{ marginBottom: '10px' }}>
                     <span className='pt-icon pt-icon-search' />
                     <input className='pt-input' type='search' placeholder='Search components...' dir='auto' />
                 </div>

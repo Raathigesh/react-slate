@@ -8,6 +8,9 @@ const recast = require('recast');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const traverse = require("ast-traverse");
 import Knob from './Knob';
+import ComponentsKit from './ComponentsKit';
+import ComponentMeta, { ComponentExport, ComponentProp } from './ComponentMeta';
+
 
 export class EditorSession {
     @observable public code: string;
@@ -15,9 +18,11 @@ export class EditorSession {
     @observable public highlightedNode: any;
     @observable public highlightedNodeParent: any;
     @observable public knob: Knob;
+    @observable public componentKit: ComponentsKit;
     public importDeclarations: any[];
 
     constructor() {
+        this.componentKit = new ComponentsKit();
         this.code = `
 import React, { Component } from 'react';
 
@@ -36,22 +41,50 @@ class HelloWorld extends Component {
         this.knob = new Knob(() => {
              this.regenerateCode();
         });
-        this.addImport();
     }
 
     @action
     public setCode = (code: string) => {
         this.code = code;
-    }
-
-    @action
-    public addImport = () => {
         this.ast = recast.parse(this.code, {
             tolerant: true, jsx: true, range: true
         });
-        const nodes = recast.parse(`import { Button } from 'react-toolbox';`);
+    }
+
+    @action
+    public addComponent = (id: string) => {
+        const component = this.componentKit.getComponentById(id);
+        this.addImport(component.exported);
+    }
+
+    @action
+    public addImport = (componentExport: ComponentExport) => {
+        this.ast = recast.parse(this.code, {
+            tolerant: true, jsx: true, range: true
+        });
+        const importString = this.getImportStatement(componentExport);
+        const nodes = recast.parse(importString);
         this.ast.program.body.unshift(nodes.program.body[0]);
         this.code = recast.print(this.ast).code;
+    }
+
+    public getImportStatement = (compoentExport: ComponentExport) => {
+        if (compoentExport.exportType === 'default') {
+            return `import ${compoentExport.identifier} from '${this.componentKit.name}'`;
+        } else if (compoentExport.exportType === 'named') {
+            return `import { ${compoentExport.identifier} } from '${this.componentKit.name}'`;
+        }
+    }
+
+    public getComponentSnippet = (componentMeta: ComponentMeta) => {
+        return `
+            <${componentMeta.name}
+            />
+        `;
+    }
+
+    public addProp = (props: ComponentProp) => {
+
     }
 
     @action
@@ -104,7 +137,6 @@ class HelloWorld extends Component {
                 }
             }
         }
-
         console.log(declarion);
     }
 }

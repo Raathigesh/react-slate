@@ -2,7 +2,7 @@
  * Store which deals with editor knobs
  */
 
-import { observable, when, action } from 'mobx';
+import { observable, action } from 'mobx';
 
 import TextKnobComponent from '../knobs/text/component';
 import TextKnobModel from '../knobs/text/model';
