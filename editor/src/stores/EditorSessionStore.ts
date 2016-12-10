@@ -2,14 +2,15 @@
  * Editor session
  */
 
-import { observable, action, when, asReference } from 'mobx';
+import { observable, action } from 'mobx';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const recast = require('recast');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
-const traverse = require("ast-traverse");
+const traverse = require('ast-traverse');
 import Knob from './Knob';
 import ComponentsKit from './ComponentsKit';
-import ComponentMeta, { ComponentExport, ComponentProp } from './ComponentMeta';
+import ComponentMeta, { IComponentExport, IComponentProp } from './ComponentMeta';
+import startSnippet from './startSnippet';
 
 
 export class EditorSession {
@@ -23,19 +24,7 @@ export class EditorSession {
 
     constructor() {
         this.componentKit = new ComponentsKit();
-        this.code = `
-import React, { Component } from 'react';
-
-class HelloWorld extends Component {
-    render() {
-        return <div>
-            <Button
-                name="hello" 
-            />
-        </div>;
-    }
-}
-`;
+        this.code = startSnippet;
         this.importDeclarations = [];
         this.highlightedNode = null;
         this.knob = new Knob(() => {
@@ -58,32 +47,29 @@ class HelloWorld extends Component {
     }
 
     @action
-    public addImport = (componentExport: ComponentExport) => {
+    public addImport = (componentExport: IComponentExport) => {
         this.ast = recast.parse(this.code, {
             tolerant: true, jsx: true, range: true
         });
         const importString = this.getImportStatement(componentExport);
         const nodes = recast.parse(importString);
         this.ast.program.body.unshift(nodes.program.body[0]);
-        this.code = recast.print(this.ast).code;
+        this.code = recast.prettyPrint(this.ast, { tabWidth: 2 }).code;
     }
 
-    public getImportStatement = (compoentExport: ComponentExport) => {
+    public getImportStatement = (compoentExport: IComponentExport) => {
         if (compoentExport.exportType === 'default') {
-            return `import ${compoentExport.identifier} from '${this.componentKit.name}'`;
+            return `import ${compoentExport.identifier} from '${this.componentKit.name}';`;
         } else if (compoentExport.exportType === 'named') {
-            return `import { ${compoentExport.identifier} } from '${this.componentKit.name}'`;
+            return `import { ${compoentExport.identifier} } from '${this.componentKit.name}';`;
         }
     }
 
     public getComponentSnippet = (componentMeta: ComponentMeta) => {
-        return `
-            <${componentMeta.name}
-            />
-        `;
+        return `<${componentMeta.name} />`;
     }
 
-    public addProp = (props: ComponentProp) => {
+    public addProp = (props: IComponentProp) => {
 
     }
 
@@ -121,7 +107,7 @@ class HelloWorld extends Component {
 
     @action
     public regenerateCode = () => {
-         this.code = recast.print(this.ast).code;
+         this.code = recast.prettyPrint(this.ast, { tabWidth: 2 }).code;
     }
 
     @action

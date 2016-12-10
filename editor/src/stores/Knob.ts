@@ -29,7 +29,6 @@ export default class KnobStore {
         } else {
             this.knob = null;
         }
-
     }
 
     @action

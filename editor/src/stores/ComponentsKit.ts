@@ -3,7 +3,7 @@
  */
 
 import { observable, IObservableArray, action } from 'mobx';
-import ComponentMeta, { ComponentExport } from './ComponentMeta';
+import ComponentMeta, { IComponentExport } from './ComponentMeta';
 
 export default class ComponentsKit {
     @observable public name: string;
@@ -18,7 +18,21 @@ export default class ComponentsKit {
             props: [{
                 name: 'name',
                 propType: 'string',
-                defaultValue: 'Hello World'
+                defaultValue: 'Hello World',
+                required: true
+            }, {
+                name: 'isPrimary',
+                propType: 'boolean',
+                defaultValue: false
+            }, {
+                name: 'theme',
+                propType: 'boolean',
+                defaultValue: false
+            }, {
+                name: 'type',
+                propType: 'multiOptions',
+                options: ['left', 'right', 'center'],
+                defaultValue: 'right'
             }],
             exported:  {
                 exportType: 'named',
