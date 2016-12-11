@@ -7,6 +7,7 @@ const traverse = require('ast-traverse');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const recast = require('recast');
 import { IComponentExport } from './../stores/ComponentMeta';
+import componentPropType from './componentPropType';
 
 /**
  * Finds the node that is in the given editor position
@@ -166,26 +167,55 @@ export function extractPropsFromComponent(reactComponentNode: any) {
  * @param {*} value
  * @returns
  */
-export function addOrUpdatePropertyOfReactComponent(componentNode: any, propertyName: string, value: any) {
+export function addOrUpdatePropertyOfReactComponent(
+    componentNode: any,
+    propertyName: string,
+    value: any,
+    propType: string
+) {
+    let attr = null;
     for (const attribute of componentNode.openingElement.attributes) {
         if (attribute.name.name === propertyName) {
-            attribute.value.value = value;
-            attribute.value.raw = value;
-
-            return;
+            attr = attribute;
         }
     }
 
-    componentNode.openingElement.attributes.push({
-        type: 'JSXAttribute',
-        name: {
-            type: 'JSXIdentifier',
-            name: propertyName
-        },
-        value: {
-            type: 'Literal',
-            value,
-            raw: value
+    if (propType === componentPropType.string) {
+        if (attr) {
+            attr.value.value = value;
+            attr.value.raw = value;
+        } else {
+            componentNode.openingElement.attributes.push({
+                type: 'JSXAttribute',
+                name: {
+                    type: 'JSXIdentifier',
+                    name: propertyName
+                },
+                value: {
+                    type: 'Literal',
+                    value,
+                    raw: value
+                }
+            });
         }
-    });
+    } else if (propType === componentPropType.boolean) {
+        if (attr) {
+            attr.value.expression.value = value;
+        } else {
+            componentNode.openingElement.attributes.push({
+                type: 'JSXAttribute',
+                name: {
+                    type: 'JSXIdentifier',
+                    name: propertyName
+                },
+                value: {
+                    type: 'JSXExpressionContainer',
+                    expression: {
+                        type: 'Literal',
+                        value,
+                    }
+                }
+            });
+        }
+    }
 }

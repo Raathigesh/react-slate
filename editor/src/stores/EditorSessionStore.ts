@@ -15,12 +15,14 @@ import {
     findImportDeclartionOfComponent,
     extractPropsFromComponent
 } from '../services/astHelper';
+import componentPropsTypes from '../services/componentPropType';
 
 export interface IEditorSessionComponentProps extends IComponentProp {
     model: any;
 }
 
 import { Model as TextModel } from './../knobs/text';
+import { Model as BooleanModel } from './../knobs/boolean';
 
 export class EditorSession {
     @observable public code: string;
@@ -99,8 +101,10 @@ export class EditorSession {
         for (const prop of this.componentsMeta.props) {
             let model = null;
 
-            if (prop.propType === 'string') {
+            if (prop.propType === componentPropsTypes.string) {
                 model = new TextModel(prop.name, this.componentNode);
+            } else if (prop.propType === componentPropsTypes.boolean) {
+                model = new BooleanModel(prop.name, this.componentNode);
             }
 
             const propWithModel = {

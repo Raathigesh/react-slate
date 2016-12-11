@@ -5,7 +5,10 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { IEditorSessionComponentProps } from '../../stores/EditorSessionStore';
-import {Component as TextKnob, Model as TextModel} from '../../knobs/text';
+import {Component as TextKnob} from '../../knobs/text';
+import {Component as BooleanKnob} from '../../knobs/boolean';
+import componentPropTypes from '../../services/componentPropType';
+
 
 interface IRowProps {
     componentProps: IEditorSessionComponentProps;
@@ -18,9 +21,10 @@ export default class Row extends React.Component<IRowProps, {}> {
     public render() {
         let knob = null;
 
-        if (this.props.componentProps.propType === 'string') {
-            const textModel = new TextModel(this.props.componentProps.name, this.props.componentNode);
+        if (this.props.componentProps.propType === componentPropTypes.string) {
             knob = <TextKnob model={this.props.componentProps.model} onChange={this.props.onChange} />;
+        } else if (this.props.componentProps.propType === componentPropTypes.boolean) {
+            knob = <BooleanKnob model={this.props.componentProps.model} onChange={this.props.onChange} />;
         }
 
         return (

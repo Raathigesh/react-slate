@@ -23,23 +23,29 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
                     <span className='pt-icon pt-icon-search' />
                     <input className='pt-input' type='search' placeholder='Search components...' dir='auto' />
                 </div>
-                <div className='pt-card pt-elevation-1' style={{
-                    backgroundColor: '#0258b0',
-                    color: 'white',
-                    marginBottom: '10px',
-                    padding: '9px'
-                }}>
+                <div
+                    className='pt-card pt-elevation-1'
+                    style={{
+                        backgroundColor: '#0258b0',
+                        color: 'white',
+                        marginBottom: '10px',
+                        padding: '9px'
+                    }}
+                >
                     My Components
                 </div>
-                <div className="pt-card .modifier">
-                    <span className="pt-icon-standard pt-icon-projects"></span>
+                <div className='pt-card .modifier'>
+                    <span className='pt-icon-standard pt-icon-projects' />
                 </div>
-                <div className='pt-card pt-elevation-1' style={{
-                    backgroundColor: '#0258b0',
-                    color: 'white',
-                    marginBottom: '10px',
-                    padding: '9px'
-                }}>
+                <div
+                    className='pt-card pt-elevation-1'
+                    style={{
+                        backgroundColor: '#0258b0',
+                        color: 'white',
+                        marginBottom: '10px',
+                        padding: '9px'
+                    }}
+                >
                     My Components
                 </div>
                 {components}

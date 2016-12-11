@@ -4,6 +4,7 @@
 
 import { observable, action } from 'mobx';
 import { getInitialValue, update } from '../nodeManipulator';
+import componentPropType from '../../../services/componentPropType';
 
 export default class TextKonb {
     @observable public text: string;
