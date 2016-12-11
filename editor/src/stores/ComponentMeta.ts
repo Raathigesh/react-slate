@@ -23,4 +23,9 @@ export default class ComponentMeta {
     @observable public props: IComponentProp[];
     @observable public exported: IComponentExport;
     @observable public children?: ComponentMeta[];
+
+    constructor() {
+        this.props = [];
+        this.children = [];
+    }
 }

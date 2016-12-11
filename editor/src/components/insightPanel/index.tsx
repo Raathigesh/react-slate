@@ -5,11 +5,22 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@blueprintjs/core';
+import { IEditorSessionComponentProps } from '../../stores/EditorSessionStore';
+import Row from './Row';
 
+interface IInsightPanelProps {
+    componentProps: IEditorSessionComponentProps[];
+    componentNode: any;
+    onChange: () => void;
+}
 
 @observer
-export default class InsightPanel extends React.Component<{}, {}> {
+export default class InsightPanel extends React.Component<IInsightPanelProps, {}> {
     public render() {
+
+        const rows = this.props.componentProps.map(item => {
+            return <Row componentProps={item} componentNode={this.props.componentNode} onChange={this.props.onChange}/>;
+        });
         return (
             <div className='pt-card' style={{ height: '100%' }}>
                 <h5>Button Component {' '}
@@ -22,54 +33,7 @@ export default class InsightPanel extends React.Component<{}, {}> {
                         <th>Description</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <h6>name  <span className='pt-tag pt-minimal pt-intent-success'>Required</span></h6>
-                                Name text of the button
-                            </td>
-                            <td>
-                                <input className='pt-input' type='text' placeholder='Text input' dir='auto' />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h6>
-                                    isPrimary  <span className='pt-tag pt-minimal pt-intent-primary'>Optional</span>
-                                </h6>
-                                Is the button a parimary
-                            </td>
-                            <td>
-                                <Checkbox />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h6>
-                                    theme  <span className='pt-tag pt-minimal pt-intent-primary'>Optional</span>
-                                </h6>
-                                Theme of the button
-                            </td>
-                            <td>
-                                <Checkbox />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h6>
-                                    type  <span className='pt-tag pt-minimal pt-intent-primary'>Optional</span>
-                                </h6>
-                                Type of the button
-                            </td>
-                            <td>
-                                <div className='pt-button-group pt-small pt-fill'>
-                                    <a className='pt-button' role='button'>Start</a>
-                                    <a className='pt-button' role='button'>Left</a>
-                                    <a className='pt-button pt-active' role='button'>Middle</a>
-                                    <a className='pt-button' role='button'>Right</a>
-                                    <a className='pt-button' role='button'>End</a>
-                                </div>
-                            </td>
-                        </tr>
+                       {rows}
                     </tbody>
                 </table>
             </div>

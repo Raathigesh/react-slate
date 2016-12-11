@@ -61,7 +61,11 @@ export default class Home extends React.Component<IHomeProps, {}> {
                         />
                     </div>
                     <div className='col-md-4'>
-                        <InsightPanel />
+                        <InsightPanel
+                            componentProps={editorSessionStore.props}
+                            componentNode={editorSessionStore.componentNode}
+                            onChange={editorSessionStore.regenerateCode}
+                        />
                     </div>
                 </div>
             </div>

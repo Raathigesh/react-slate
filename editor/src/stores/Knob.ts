@@ -23,7 +23,7 @@ export default class KnobStore {
     @action
     public getKnob = () => {
         if (this.node && this.node.type === 'JSXText') {
-            this.knobModel = new TextKnobModel(this.node);
+            //this.knobModel = new TextKnobModel(this.node);
             this.astMutator = textKnowMutation;
             this.knob = TextKnobComponent;
         } else {
