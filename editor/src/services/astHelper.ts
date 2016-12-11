@@ -150,6 +150,8 @@ export function extractPropsFromComponent(reactComponentNode: any) {
         for (const attribute of reactComponentNode.openingElement.attributes) {
             if (attribute.value.type === 'Literal') {
                 props[attribute.name.name] = attribute.value.value;
+            } else if (attribute.value.type === 'JSXExpressionContainer') {
+                props[attribute.name.name] = attribute.value.expression.value;
             }
         }
     }
@@ -216,6 +218,18 @@ export function addOrUpdatePropertyOfReactComponent(
                     }
                 }
             });
+        }
+    }
+}
+
+export function getReactComponentAttributeValue(componentNode: any, propertyName: string, propType: string) {
+    for (const attribute of componentNode.openingElement.attributes) {
+        if (attribute.name.name === propertyName) {
+             if (propType === componentPropType.string) {
+                 return attribute.value.value;
+             } else if (propType === componentPropType.boolean) {
+                 return attribute.value.expression.value;
+             }
         }
     }
 }

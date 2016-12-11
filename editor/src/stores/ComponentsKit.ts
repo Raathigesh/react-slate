@@ -26,10 +26,6 @@ export default class ComponentsKit {
                 propType: 'boolean',
                 defaultValue: false
             }, {
-                name: 'theme',
-                propType: 'boolean',
-                defaultValue: false
-            }, {
                 name: 'type',
                 propType: 'multiOptions',
                 options: ['left', 'right', 'center'],

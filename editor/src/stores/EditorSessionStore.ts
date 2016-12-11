@@ -133,7 +133,7 @@ export class EditorSession {
 
     @action
     public regenerateCode = () => {
-        this.code = recast.print(this.ast).code;
+        this.code = recast.prettyPrint(this.ast, { tabWidth: 2 }).code;
     }
 
     @action

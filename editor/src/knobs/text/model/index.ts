@@ -12,7 +12,7 @@ export default class TextKonb {
     public propName: string;
 
     constructor(propName, node) {
-        this.text = getInitialValue(node);
+        this.text = getInitialValue(node, propName);
         this.propName = propName;
         this.node = node;
     }

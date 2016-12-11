@@ -11,7 +11,7 @@ export default class BooleanKonb {
     public propName: string;
 
     constructor(propName, node) {
-        this.isTrue = getInitialValue(node);
+        this.isTrue = getInitialValue(node, propName);
         this.propName = propName;
         this.node = node;
     }
