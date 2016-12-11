@@ -144,13 +144,28 @@ function getImportStatementForComponent(componentExport: IComponentExport, modul
 
 export function extractPropsFromComponent(reactComponentNode: any) {
     const props = {};
-    for (const attribute of reactComponentNode.openingElement.attributes) {
-        if (attribute.vaue.type === 'Literal') {
-            props[attribute.name] = attribute.value.value;
+
+    if (reactComponentNode) {
+        for (const attribute of reactComponentNode.openingElement.attributes) {
+            if (attribute.value.type === 'Literal') {
+                props[attribute.name.name] = attribute.value.value;
+            }
         }
     }
+
+    return props;
 }
 
+/**
+ * 
+ * Updates or adds an attribute value of a react component
+ * 
+ * @export
+ * @param {*} componentNode
+ * @param {string} propertyName
+ * @param {*} value
+ * @returns
+ */
 export function addOrUpdatePropertyOfReactComponent(componentNode: any, propertyName: string, value: any) {
     for (const attribute of componentNode.openingElement.attributes) {
         if (attribute.name.name === propertyName) {

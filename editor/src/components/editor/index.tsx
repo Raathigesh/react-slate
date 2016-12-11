@@ -14,17 +14,13 @@ const { DropTarget } = require('react-dnd');
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const client = require('../../../../lib/middleMan/client');
 import { observer } from 'mobx-react';
-import KnobFloater from '../knobFloater';
 import './style.scss';
 
 interface ISequencePanelProps {
     connectDropTarget?: any;
     code: string;
-    onChange: (code: string) => void;
+    onChange: (code: string, position: any) => void;
     onClick: (posision: any) => void;
-    knob: any;
-    onKnobChange: (value: any) =>  void;
-    knobModel: any;
 }
 
 const squareTarget = {
@@ -61,7 +57,6 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
         });
         this.connection = connection;
         this.editor.editor.on('click', (e) => {
-            console.log(this.editor.editor.getCursorPosition())
             this.props.onClick(this.editor.editor.getCursorPosition());
             this.setState({
                 x: e.x,
@@ -72,7 +67,8 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
     }
 
     public onChange = (newValue) => {
-        this.connection.emit('updateFile', newValue);
+        this.props.onChange(newValue, this.editor.editor.getCursorPosition());
+        //this.connection.emit('updateFile', newValue);
     }
 
     public insertInCursor = (code: string) => {
@@ -93,17 +89,11 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
                     theme='chaos'
                     name='UNIQUE_ID_OF_DIV'
                     editorProps={{$blockScrolling: true}}
-                    onChange={this.props.onChange}
+                    onChange={this.onChange}
                     value={this.props.code}
                     fontSize={14}
                     height='inherit'
                     width='inherit'
-                />
-                <KnobFloater
-                    location={this.state}
-                    knob={this.props.knob}
-                    onKnobChange={this.props.onKnobChange}
-                    knobModel={this.props.knobModel}
                 />
             </div>
         );

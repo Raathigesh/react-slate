@@ -5,7 +5,6 @@
 import { observable, action } from 'mobx';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const recast = require('recast');
-import Knob from './Knob';
 import ComponentsKit from './ComponentsKit';
 import ComponentMeta, { IComponentExport, IComponentProp } from './ComponentMeta';
 import startSnippet from './startSnippet';
@@ -13,7 +12,8 @@ import {
     getAllImportDeclarations,
     findNodeInEditorPosition,
     addImportStatementForComponent,
-    findImportDeclartionOfComponent
+    findImportDeclartionOfComponent,
+    extractPropsFromComponent
 } from '../services/astHelper';
 
 export interface IEditorSessionComponentProps extends IComponentProp {
@@ -27,12 +27,11 @@ export class EditorSession {
     public ast: any;
     @observable public highlightedNode: any;
     @observable public highlightedNodeParent: any;
-    @observable public knob: Knob;
     @observable public componentKit: ComponentsKit;
     public importDeclarations: any[];
     @observable public componentsMeta: ComponentMeta;
     @observable public componentNode: any;
-
+    @observable public cursorPosion: any;
     @observable public props: IEditorSessionComponentProps[];
 
     constructor() {
@@ -42,14 +41,16 @@ export class EditorSession {
         this.highlightedNode = null;
         this.componentsMeta = new ComponentMeta();
         this.props = [];
-        this.knob = new Knob(() => {
-             //this.regenerateCode();
-        });
+        this.cursorPosion = null;
     }
 
     @action
-    public setCode = (code: string) => {
+    public setCode = (code: string, position: { row: number, column: number }) => {
+        this.cursorPosion = position;
         this.code = code;
+        this.generateAst();
+        this.updatePropsModelWithNewValues();
+        this.findNode(this.cursorPosion);
     }
 
     @action
@@ -83,20 +84,23 @@ export class EditorSession {
             this.importDeclarations
         );
 
-        const componentMeta = this.componentKit.getComponentMeta(declaration);
-        this.componentsMeta = componentMeta;
-        this.buildMetaPropsWithModel();
+        if (declaration) {
+            const componentMeta = this.componentKit.getComponentMeta(declaration);
+            this.componentsMeta = componentMeta;
+        }
 
-        console.log(componentMeta);
+        this.buildMetaPropsWithModel();
+        this.updatePropsModelWithNewValues();
     }
 
     @action
     public buildMetaPropsWithModel = () => {
+        this.props = [];
         for (const prop of this.componentsMeta.props) {
             let model = null;
 
             if (prop.propType === 'string') {
-                model = new TextModel(prop.name,  this.componentNode);
+                model = new TextModel(prop.name, this.componentNode);
             }
 
             const propWithModel = {
@@ -112,13 +116,25 @@ export class EditorSession {
     }
 
     @action
+    public updatePropsModelWithNewValues = () => {
+        const updatedProps = extractPropsFromComponent(this.componentNode);
+        Object.keys(updatedProps).forEach((key) => {
+            for (const modelProps of this.props) {
+                if (modelProps.name === key) {
+                    modelProps.model.setValue(updatedProps[key]);
+                }
+            }
+        });
+    }
+
+    @action
     public regenerateCode = () => {
-         this.code = recast.print(this.ast).code;
+        this.code = recast.print(this.ast).code;
     }
 
     @action
     public generateAst = () => {
-         this.ast = recast.parse(this.code, {
+        this.ast = recast.parse(this.code, {
             tolerant: false, jsx: true, range: true
         });
     }

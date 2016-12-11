@@ -55,9 +55,6 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             onChange={editorSessionStore.setCode}
                             code={editorSessionStore.code}
                             onClick={editorSessionStore.findNode}
-                            onKnobChange={editorSessionStore.knob.onKnobChange}
-                            knobModel={editorSessionStore.knob.knobModel}
-                            knob={editorSessionStore.knob.knob}
                         />
                     </div>
                     <div className='col-md-4'>
