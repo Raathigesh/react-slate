@@ -16,15 +16,15 @@ const Html5Backend = require('react-dnd-html5-backend');
 import ComponentsPanel from '../components/componentsPanel';
 import InsightPanel from '../components/insightPanel';
 import { EditorSession } from '../stores/EditorSessionStore';
-import { ComponentStore } from '../stores/ComponentStore';
+import { ConfigStore } from '../stores/config';
 
 interface IHomeProps {
     editorSessionStore?: EditorSession;
-    componentStore?: ComponentStore;
+    configStore?: ConfigStore;
 }
 
 @inject('editorSessionStore')
-@inject('componentStore')
+@inject('configStore')
 @DragDropContext(Html5Backend)
 @observer
 export default class Home extends React.Component<IHomeProps, {}> {
@@ -36,17 +36,23 @@ export default class Home extends React.Component<IHomeProps, {}> {
     }
 
     public render() {
-        const { editorSessionStore } = this.props;
+        const { editorSessionStore, configStore } = this.props;
         return (
             <div className='container-fluid'>
                 <div className='row' style={{marginTop: '50px'}}>
-                    <NavBar />
+                    <NavBar
+                      componentKitsConfigs={this.props.configStore.installedComponentKits}
+                      activeComponentKit={this.props.configStore.activeComponentKit}
+                      onComponentKitChange={this.props.configStore.setActiveComponentKit}
+                    />
                 </div>
                 <div className='row' style={{marginTop: '50px'}}>
                     <div className='col-md-2'>
                         <ComponentsPanel
-                            components={this.props.componentStore.componentsKit.components}
+                            components={this.props.editorSessionStore.filteredComponent}
                             onDropped={this.onComponentDroppedOnEditor}
+                            searchText={this.props.editorSessionStore.componentSearchText}
+                            onSearchTextChange={this.props.editorSessionStore.setFitlerText}
                         />
                     </div>
                     <div className='col-md-6'>
@@ -55,10 +61,12 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             onChange={editorSessionStore.setCode}
                             code={editorSessionStore.code}
                             onClick={editorSessionStore.findNode}
+                            onSave={configStore.writeCode}
                         />
                     </div>
                     <div className='col-md-4'>
                         <InsightPanel
+                            componentInfo={editorSessionStore.componentsMeta}
                             componentProps={editorSessionStore.props}
                             componentNode={editorSessionStore.componentNode}
                             onChange={editorSessionStore.regenerateCode}

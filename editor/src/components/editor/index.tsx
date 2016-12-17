@@ -11,8 +11,6 @@ import 'brace/mode/jsx';
 import 'brace/theme/chaos';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const { DropTarget } = require('react-dnd');
-// tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
-const client = require('../../../../lib/middleMan/client');
 import { observer } from 'mobx-react';
 import './style.scss';
 
@@ -21,6 +19,7 @@ interface ISequencePanelProps {
     code: string;
     onChange: (code: string, position: any) => void;
     onClick: (posision: any) => void;
+    onSave: (code: string) => void;
 }
 
 const squareTarget = {
@@ -51,17 +50,20 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
     }
 
     public componentDidMount = () => {
-        const connection = client('http://localhost:3000', {
-            hello: () => {
-            }
-        });
-        this.connection = connection;
         this.editor.editor.on('click', (e) => {
             this.props.onClick(this.editor.editor.getCursorPosition());
             this.setState({
                 x: e.x,
                 y: e.y
             });
+        });
+
+        this.editor.editor.commands.addCommand({
+            name: 'save',
+            exec: () => {
+                this.props.onSave(this.editor.editor.getValue());
+            },
+            bindKey: {mac: 'cmd-s', win: 'ctrl-s'}
         });
 
     }

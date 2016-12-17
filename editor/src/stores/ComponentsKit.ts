@@ -12,30 +12,7 @@ export default class ComponentsKit {
 
     constructor() {
         this.name = 'react-toolbox';
-        this.components = observable([{
-            id: 'button',
-            name: 'Button',
-            description: 'A Button component',
-            props: [{
-                name: 'name',
-                propType: 'string',
-                defaultValue: 'Hello World',
-                required: true
-            }, {
-                name: 'isPrimary',
-                propType: 'boolean',
-                defaultValue: false
-            }, {
-                name: 'type',
-                propType: 'multiOptions',
-                options: ['left', 'right', 'center'],
-                defaultValue: 'right'
-            }],
-            exported:  {
-                exportType: 'named',
-                identifier: 'Button'
-            }
-        }]);
+        this.components = observable([]);
     }
 
     @action
@@ -45,6 +22,11 @@ export default class ComponentsKit {
                 return component;
             }
         }
+    }
+
+    @action
+    public setComponentKit = (details: any) => {
+         this.components = observable(<any[]>details.components);
     }
 
     public getComponentMeta = (importStatementMeta: IImportStatement) => {

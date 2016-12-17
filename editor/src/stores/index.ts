@@ -3,9 +3,9 @@
  */
 
 import editorSessionStore from './EditorSessionStore';
-import componentStore from './ComponentStore';
+import configStore from './config';
 
 export {
     editorSessionStore,
-    componentStore
+    configStore
 };

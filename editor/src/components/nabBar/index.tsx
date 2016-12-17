@@ -3,6 +3,7 @@
  */
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import {
     Popover,
     PopoverInteractionKind,
@@ -14,8 +15,17 @@ import {
     Tab,
     TabPanel
 } from '@blueprintjs/core';
+import ComponentKitConfig from '../../stores/config/ComponentKitConfig';
 
-class NavBar extends React.Component<{}, {}> {
+
+interface INavBarProps {
+    componentKitsConfigs: ComponentKitConfig[];
+    activeComponentKit: ComponentKitConfig;
+    onComponentKitChange: (componentKitKey: string) => void;
+}
+
+@observer
+class NavBar extends React.Component<INavBarProps, {}> {
     public getPreferenceComponentContent = () => {
         return (
             <div>
@@ -69,15 +79,17 @@ class NavBar extends React.Component<{}, {}> {
     public render() {
         const componentKitList = (
             <ul className='pt-menu pt-elevation-1'>
-                <li>
-                    <a className='pt-menu-item pt-icon-people' >Share...</a>
-                </li>
-                <li>
-                    <a className='pt-menu-item pt-icon-circle-arrow-right' >Move...</a>
-                </li>
-                <li>
-                    <a className='pt-menu-item pt-icon-edit' >Rename</a>
-                </li>
+                {this.props.componentKitsConfigs.map(item => {
+                    return (
+                        <li onClick={() => {this.props.onComponentKitChange(item.name)}}>
+                            <a
+                                className='pt-menu-item pt-icon-control'
+                            >
+                                {item.label}
+                            </a>
+                        </li>
+                    );
+                })}
             </ul>
         );
 
@@ -92,7 +104,7 @@ class NavBar extends React.Component<{}, {}> {
                         useSmartPositioning={false}>
                         <button type='button' className='pt-button'>
                             <span className='pt-icon-standard pt-icon-control' />
-                            React Hello World
+                            {this.props.activeComponentKit.label}
                             <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
                         </button>
                     </Popover>
@@ -103,7 +115,7 @@ class NavBar extends React.Component<{}, {}> {
                         iconName='pt-icon-application'
                         rightIconName='pt-icon-link'
                         intent={Intent.PRIMARY}
-                        />
+                    />
                     <span className='pt-navbar-divider' />
                     <Popover
                         content={this.getPreferenceComponentContent()}

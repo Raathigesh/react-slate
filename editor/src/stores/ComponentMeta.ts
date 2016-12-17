@@ -7,6 +7,7 @@ import { observable } from 'mobx';
 export interface IComponentExport {
     exportType: string;
     identifier: string;
+    moduleName: string;
 }
 
 export interface IComponentProp {

@@ -2,7 +2,7 @@
  * Editor session
  */
 
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const recast = require('recast');
 import ComponentsKit from './ComponentsKit';
@@ -35,15 +35,23 @@ export class EditorSession {
     @observable public componentNode: any;
     @observable public cursorPosion: any;
     @observable public props: IEditorSessionComponentProps[];
+    @observable public componentSearchText: string;
 
     constructor() {
         this.componentKit = new ComponentsKit();
         this.code = startSnippet;
         this.importDeclarations = [];
         this.highlightedNode = null;
-        this.componentsMeta = new ComponentMeta();
+        this.componentsMeta = null;
         this.props = [];
         this.cursorPosion = null;
+        this.componentSearchText = '';
+    }
+
+    @action
+    public updateCode = (code: string) => {
+        this.code = code;
+        this.generateAst();
     }
 
     @action
@@ -52,7 +60,7 @@ export class EditorSession {
         this.code = code;
         this.generateAst();
         this.updatePropsModelWithNewValues();
-        this.findNode(this.cursorPosion);
+        //this.findNode(this.cursorPosion);
     }
 
     @action
@@ -64,7 +72,7 @@ export class EditorSession {
     @action
     public addImport = (componentExport: IComponentExport) => {
         this.generateAst();
-        addImportStatementForComponent(componentExport, this.componentKit.name, this.ast);
+        addImportStatementForComponent(componentExport, componentExport.moduleName, this.ast);
         this.regenerateCode();
     }
 
@@ -97,6 +105,10 @@ export class EditorSession {
 
     @action
     public buildMetaPropsWithModel = () => {
+        if (!this.componentsMeta) {
+            return;
+        }
+
         this.props = [];
         for (const prop of this.componentsMeta.props) {
             let model = null;
@@ -141,6 +153,19 @@ export class EditorSession {
         this.ast = recast.parse(this.code, {
             tolerant: false, jsx: true, range: true
         });
+    }
+
+    @computed
+    public get filteredComponent() {
+        const myRegExp = new RegExp(this.componentSearchText, 'i');
+        return this.componentKit.components.filter((component) => {
+            return myRegExp.test(component.name);
+        });
+    }
+
+    @action
+    public setFitlerText = (text: string) => {
+        this.componentSearchText = text;
     }
 }
 
