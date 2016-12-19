@@ -5,9 +5,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import '@blueprintjs/core/dist/blueprint.css';
 import 'flexboxgrid/css/flexboxgrid.css';
-import {} from '@blueprintjs/core';
 import Editor from '../components/editor';
-import Preview from '../components/preview';
 import NavBar from '../components/nabBar';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const { DragDropContext } = require('react-dnd');
@@ -17,6 +15,8 @@ import ComponentsPanel from '../components/componentsPanel';
 import InsightPanel from '../components/insightPanel';
 import { EditorSession } from '../stores/EditorSessionStore';
 import { ConfigStore } from '../stores/config';
+import Notification from '../components/notification';
+import './style.scss';
 
 interface IHomeProps {
     editorSessionStore?: EditorSession;
@@ -38,24 +38,35 @@ export default class Home extends React.Component<IHomeProps, {}> {
     public render() {
         const { editorSessionStore, configStore } = this.props;
         return (
-            <div className='container-fluid'>
-                <div className='row' style={{marginTop: '50px'}}>
+            <div className='container-fluid app-container'>
+                <Notification
+                    message={configStore.notification.message}
+                    notificationType={configStore.notification.notificationType}
+                />
+                <div className='row'>
                     <NavBar
-                      componentKitsConfigs={this.props.configStore.installedComponentKits}
-                      activeComponentKit={this.props.configStore.activeComponentKit}
-                      onComponentKitChange={this.props.configStore.setActiveComponentKit}
+                      componentKitsConfigs={configStore.installedComponentKits}
+                      activeComponentKit={configStore.activeComponentKit}
+                      onComponentKitChange={configStore.setActiveComponentKit}
+                      onModuleInstall={configStore.installModule}
+                      dependencies={editorSessionStore.dependencies}
+                      onModuleUninstall={configStore.uninstallModule}
+                      isInProgress={configStore.isInProgress}
+                      componentKitInfo={configStore.componentKitInfo}
+                      onComponentInstall={configStore.installComponentKit}
+                      onComponentUnInstall={configStore.uninstallComponentKit}
                     />
                 </div>
-                <div className='row' style={{marginTop: '50px'}}>
-                    <div className='col-md-2'>
+                <div className='row' style={{marginTop: '60px'}}>
+                    <div className='col-md-2 componentPanel'>
                         <ComponentsPanel
-                            components={this.props.editorSessionStore.filteredComponent}
+                            components={editorSessionStore.filteredComponent}
                             onDropped={this.onComponentDroppedOnEditor}
-                            searchText={this.props.editorSessionStore.componentSearchText}
-                            onSearchTextChange={this.props.editorSessionStore.setFitlerText}
+                            searchText={editorSessionStore.componentSearchText}
+                            onSearchTextChange={editorSessionStore.setFitlerText}
                         />
                     </div>
-                    <div className='col-md-6'>
+                    <div className='col-md-7 editorPanel'>
                         <Editor
                             ref={editor => this.editor = editor}
                             onChange={editorSessionStore.setCode}
@@ -64,7 +75,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             onSave={configStore.writeCode}
                         />
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-3 propertyPanel'>
                         <InsightPanel
                             componentInfo={editorSessionStore.componentsMeta}
                             componentProps={editorSessionStore.props}

@@ -23,7 +23,7 @@ export default class InsightPanel extends React.Component<IInsightPanelProps, {}
             return <Row componentProps={item} componentNode={this.props.componentNode} onChange={this.props.onChange}/>;
         });
         return (
-            <div className='pt-card' style={{ height: '100%', display: 'flex' }}>
+            <div className='pt-card ' style={{ height: '100%', display: 'flex' }}>
                 {this.props.componentInfo && <div style={{width: '100%'}}>
                     <h5>
                         {this.props.componentInfo.name} {' '}

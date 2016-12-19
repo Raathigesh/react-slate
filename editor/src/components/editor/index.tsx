@@ -84,7 +84,7 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
     public render() {
         const { connectDropTarget } = this.props;
         return connectDropTarget(
-            <div style={{position: 'relative', height: '82vh', width: '100%'}}>
+            <div style={{position: 'relative', height: '94vh', width: '100%'}}>
                 <AceEditor
                     ref={editor => this.editor = editor}
                     mode='jsx'

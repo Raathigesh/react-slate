@@ -24,6 +24,16 @@ export interface IEditorSessionComponentProps extends IComponentProp {
 import { Model as TextModel } from './../knobs/text';
 import { Model as BooleanModel } from './../knobs/boolean';
 
+interface IDependency {
+    name: string;
+    version: string;
+}
+
+export interface IPackageDependency {
+    devDependencies: IDependency[],
+    dependencies: IDependency[]
+}
+
 export class EditorSession {
     @observable public code: string;
     public ast: any;
@@ -36,6 +46,7 @@ export class EditorSession {
     @observable public cursorPosion: any;
     @observable public props: IEditorSessionComponentProps[];
     @observable public componentSearchText: string;
+    @observable public dependencies: IPackageDependency;
 
     constructor() {
         this.componentKit = new ComponentsKit();
@@ -46,6 +57,10 @@ export class EditorSession {
         this.props = [];
         this.cursorPosion = null;
         this.componentSearchText = '';
+        this.dependencies = {
+            devDependencies: [],
+            dependencies: []
+        };
     }
 
     @action
@@ -150,9 +165,13 @@ export class EditorSession {
 
     @action
     public generateAst = () => {
-        this.ast = recast.parse(this.code, {
-            tolerant: false, jsx: true, range: true
-        });
+        try {
+            this.ast = recast.parse(this.code, {
+                tolerant: false, jsx: true, range: true
+            });
+        } catch (e) {
+            console.log('Error in syntax');
+        }
     }
 
     @computed
@@ -166,6 +185,14 @@ export class EditorSession {
     @action
     public setFitlerText = (text: string) => {
         this.componentSearchText = text;
+    }
+
+    @action
+    public setDependencies = (dependencies: IDependency[], devDependencies: IDependency[]) => {
+        this.dependencies = {
+            dependencies,
+            devDependencies
+        };
     }
 }
 
