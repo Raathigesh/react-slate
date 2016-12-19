@@ -9,6 +9,12 @@ const recast = require('recast');
 import { IComponentExport } from './../stores/ComponentMeta';
 import componentPropType from './componentPropType';
 
+export interface IImportStatement {
+    moduleSource: string;
+    componentName: string;
+    isDefault: boolean;
+}
+
 /**
  * Finds the node that is in the given editor position
  * 
@@ -51,8 +57,6 @@ export function findNodeInEditorPosition(position: { row: number, column: number
         }
     });
 
-    console.log(jsxComponentElement);
-    console.log(position)
     return {
         node: foundNode,
         parentNode,
@@ -80,12 +84,6 @@ export function getAllImportDeclarations(ast: any) {
     return importDeclarations;
 }
 
-export interface IImportStatement {
-    moduleSource: string;
-    componentName: string;
-    isDefault: boolean;
-}
-
 /**
  * 
  * Finds the import declaration of a component 
@@ -97,6 +95,11 @@ export interface IImportStatement {
  */
 export function findImportDeclartionOfComponent(componentNode: any, parentNode: any, importDeclarations: any[]) {
     let declaration: IImportStatement = null;
+
+    if (!parentNode) {
+        return declaration;
+    }
+
     if (parentNode.type === 'JSXOpeningElement') {
         const name = componentNode.name;
         for (const importDeclation of importDeclarations) {
@@ -122,10 +125,95 @@ export function findImportDeclartionOfComponent(componentNode: any, parentNode: 
  * @param {string} moduleName
  * @param {*} ast
  */
-export function addImportStatementForComponent(componentExport: IComponentExport, moduleName: string, ast: any) {
+export function addImportStatementForComponent(
+    componentExport: IComponentExport,
+    moduleName: string,
+    ast: any
+) {
+    const importDeclarations = getAllImportDeclarations(ast);
+    if (isImportSourceAlreadyExists(moduleName, importDeclarations)) {
+        addImportSpecifierToExisingImport(componentExport, moduleName, importDeclarations);
+    } else {
+        addNewImport(componentExport, moduleName, ast);
+    }
+}
+
+/**
+ * Returns true if an import exists from a particular source/module
+ */
+function isImportSourceAlreadyExists(source: string, importDeclarations: any[]) {
+    for (const importDeclaration of importDeclarations) {
+        if (source === importDeclaration.source.value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Adds a all new import to ast
+ */
+function addNewImport(componentExport: IComponentExport, moduleName: string,  ast: any) {
     const importString = getImportStatementForComponent(componentExport, moduleName);
     const nodes = recast.parse(importString);
     ast.program.body.unshift(nodes.program.body[0]);
+}
+
+/**
+ * Adds default or named specifier to an existing import
+ */
+function addImportSpecifierToExisingImport(
+    componentExport: IComponentExport,
+    moduleName: string,
+    importDeclarations: any[]
+) {
+    for (const importDeclaration of importDeclarations) {
+        if (moduleName === importDeclaration.source.value) {
+            const specifiers = importDeclaration.specifiers;
+            if (componentExport.exportType === 'default') {
+                if (isDefaultSpecifierExists(specifiers)) {
+                    return;
+                } else {
+                    specifiers.unshift({
+                        type: 'ImportDefaultSpecifier',
+                        local: {
+                            type: 'Identifier',
+                            name: componentExport.identifier
+                        }
+                    });
+                }
+            } else if (componentExport.exportType === 'named') {
+                if (isDefaultSpecifierExists(specifiers)) {
+                    return;
+                } else {
+                    specifiers.push({
+                        type: 'ImportSpecifier',
+                        local: {
+                            type: 'Identifier',
+                            name: componentExport.identifier
+                        },
+                        imported: {
+                            type: 'Identifier',
+                            name: componentExport.identifier
+                        }
+                    });
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Checkes if there is a default import in the specifier array
+ */
+function isDefaultSpecifierExists(specifiers: any[]) {
+    for (const specifier of specifiers) {
+        if (specifier.type === 'ImportDefaultSpecifier') {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -143,6 +231,9 @@ function getImportStatementForComponent(componentExport: IComponentExport, modul
     }
 }
 
+/**
+ * Retrieves all the available prop values of a react component
+ */
 export function extractPropsFromComponent(reactComponentNode: any) {
     const props = {};
 
@@ -222,14 +313,17 @@ export function addOrUpdatePropertyOfReactComponent(
     }
 }
 
+/**
+ * Retrives the value of a provided react component atrribute value depending on its type
+ */
 export function getReactComponentAttributeValue(componentNode: any, propertyName: string, propType: string) {
     for (const attribute of componentNode.openingElement.attributes) {
         if (attribute.name.name === propertyName) {
-             if (propType === componentPropType.string) {
-                 return attribute.value.value;
-             } else if (propType === componentPropType.boolean) {
-                 return attribute.value.expression.value;
-             }
+            if (propType === componentPropType.string) {
+                return attribute.value.value;
+            } else if (propType === componentPropType.boolean) {
+                return attribute.value.expression.value;
+            }
         }
     }
 }

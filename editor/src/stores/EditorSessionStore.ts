@@ -74,7 +74,7 @@ export class EditorSession {
         this.code = code;
         this.generateAst();
         this.updatePropsModelWithNewValues();
-        //this.findNode(this.cursorPosion);
+        this.findNode(this.cursorPosion);
     }
 
     @action
