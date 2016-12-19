@@ -16,13 +16,12 @@ import {
     extractPropsFromComponent
 } from '../services/astHelper';
 import componentPropsTypes from '../services/componentPropType';
+import { Model as TextModel } from './../knobs/text';
+import { Model as BooleanModel } from './../knobs/boolean';
 
 export interface IEditorSessionComponentProps extends IComponentProp {
     model: any;
 }
-
-import { Model as TextModel } from './../knobs/text';
-import { Model as BooleanModel } from './../knobs/boolean';
 
 interface IDependency {
     name: string;
@@ -30,8 +29,8 @@ interface IDependency {
 }
 
 export interface IPackageDependency {
-    devDependencies: IDependency[],
-    dependencies: IDependency[]
+    devDependencies: IDependency[];
+    dependencies: IDependency[];
 }
 
 export class EditorSession {

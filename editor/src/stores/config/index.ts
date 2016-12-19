@@ -62,7 +62,6 @@ export class ConfigStore {
                this.installedComponentKits.push(new ComponentKitConfig(kit.name, kit.label, kit.version));
            }
            this.activeComponentKit = this.getComponentKitByKey(data.activeComponentKit);
-           //createProject(this.activeComponentKit);
         });
 
         onComponentKit((data) => {
