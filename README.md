@@ -1,2 +1,2 @@
 # React-Slate
-React JS interactive playground for your prototypes and experiments
+Interactive playground for your React JS prototypes and experiments
