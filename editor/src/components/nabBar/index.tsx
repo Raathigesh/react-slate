@@ -18,7 +18,7 @@ import {
     Button
 } from '@blueprintjs/core';
 import ComponentKitConfig from '../../stores/config/ComponentKitConfig';
-import {IPackageDependency} from '../../stores/EditorSessionStore';
+import { IPackageDependency } from '../../stores/EditorSessionStore';
 
 
 interface INavBarProps {
@@ -32,6 +32,7 @@ interface INavBarProps {
     componentKitInfo: any;
     onComponentInstall: (name: string) => void;
     onComponentUnInstall: (name: string) => void;
+    onCreateFile: (name: string) => void;
 }
 
 interface INavBarState {
@@ -41,6 +42,7 @@ interface INavBarState {
 
 @observer
 class NavBar extends React.Component<INavBarProps, INavBarState> {
+    public fileNameInput: HTMLInputElement;
     constructor(props) {
         super(props);
 
@@ -82,7 +84,7 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                     <TabPanel>
                         <table className='pt-table pt-condensed pt-bordered'>
                             <tbody>
-                               {installedKits}
+                                {installedKits}
                             </tbody>
                         </table>
                     </TabPanel>
@@ -146,11 +148,11 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                         className='pt-input'
                         placeholder='Install node module'
                         onKeyPress={this.handleModuleInstall}
-                    />
+                        />
                     <table className='pt-table pt-condensed pt-bordered'>
                         <tbody>
-                           {dependencies}
-                           {devDependencies}
+                            {dependencies}
+                            {devDependencies}
                         </tbody>
                     </table>
                     {this.props.isInProgress && <div className='pt-progress-bar'>
@@ -182,12 +184,17 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
         this.props.onComponentKitChange(this.state.newKitName);
     }
 
+    public handleFileCreation = (e) => {
+        this.props.onCreateFile(this.fileNameInput.value);
+        this.fileNameInput.value = '';
+    }
+
     public render() {
         const componentKitList = (
             <ul className='pt-menu pt-elevation-1'>
                 {this.props.componentKitsConfigs.map(item => {
                     return (
-                        <li onClick={() => {this.handleKitChange(item.name)}}>
+                        <li onClick={() => { this.handleKitChange(item.name) } }>
                             <a
                                 className='pt-menu-item pt-icon-control'
                             >
@@ -224,19 +231,37 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                         interactionKind={PopoverInteractionKind.CLICK}
                         position={Position.BOTTOM_RIGHT}
                         useSmartPositioning={false}
-                    >
+                        >
                         <button type='button' className='pt-button'>
                             <span className='pt-icon-standard pt-icon-add' />
                             Node modules
                         </button>
                     </Popover>
+                    <span className='pt-navbar-divider' />
+                    <div className='pt-control-group'>
+                        <div className='pt-input-group'>
+                            <span className='pt-icon pt-icon-new-object' />
+                            <input
+                                ref={ele => this.fileNameInput = ele}
+                                type='text'
+                                className='pt-input'
+                                placeholder='Create New File'
+                            />
+                        </div>
+                         <button
+                            className='pt-button pt-intent-primary'
+                            onClick={this.handleFileCreation}
+                        >
+                            Create
+                        </button>
+                    </div>
                 </div>
                 <div className='pt-navbar-group pt-align-right'>
                     <AnchorButton
                         text='http://localhost:9000'
                         iconName='pt-icon-application'
                         className='pt-minimal'
-                    />
+                        />
                     <span className='pt-navbar-divider' />
                     <Popover
                         content={this.getPreferenceComponentContent()}
@@ -244,7 +269,7 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                         interactionKind={PopoverInteractionKind.CLICK}
                         position={Position.BOTTOM_RIGHT}
                         useSmartPositioning={false}
-                    >
+                        >
                         <button className='pt-button pt-minimal pt-icon-cog' />
                     </Popover>
                 </div>
@@ -253,14 +278,14 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                     isOpen={this.state.isModalOpen}
                     onClose={this.handleDialogClose}
                     title='Are you sure?'
-                >
+                    >
                     <div className='pt-dialog-body'>
                         You will lose your work in the slate. Are you sure?
                     </div>
                     <div className='pt-dialog-footer'>
                         <div className='pt-dialog-footer-actions'>
-                            <Button text='Yes' onClick={this.handleKitChangeConfirm}/>
-                            <Button intent={Intent.PRIMARY}  text='No' onClick={this.handleDialogClose}/>
+                            <Button text='Yes' onClick={this.handleKitChangeConfirm} />
+                            <Button intent={Intent.PRIMARY} text='No' onClick={this.handleDialogClose} />
                         </div>
                     </div>
                 </Dialog>

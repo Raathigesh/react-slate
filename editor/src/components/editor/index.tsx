@@ -8,6 +8,8 @@ import 'brace';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const AceEditor = require('react-ace').default;
 import 'brace/mode/jsx';
+import 'brace/mode/javascript';
+import 'brace/mode/css';
 import 'brace/theme/chaos';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const { DropTarget } = require('react-dnd');
@@ -17,6 +19,7 @@ import './style.scss';
 interface ISequencePanelProps {
     connectDropTarget?: any;
     code: string;
+    mode: string;
     onChange: (code: string, position: any) => void;
     onClick: (posision: any) => void;
     onSave: (code: string) => void;
@@ -70,7 +73,6 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
 
     public onChange = (newValue) => {
         this.props.onChange(newValue, this.editor.editor.getCursorPosition());
-        //this.connection.emit('updateFile', newValue);
     }
 
     public insertInCursor = (code: string) => {
@@ -87,7 +89,7 @@ export default class Editor extends React.Component<ISequencePanelProps, {x: num
             <div style={{position: 'relative', height: '94vh', width: '100%'}}>
                 <AceEditor
                     ref={editor => this.editor = editor}
-                    mode='jsx'
+                    mode={this.props.mode}
                     theme='chaos'
                     name='UNIQUE_ID_OF_DIV'
                     editorProps={{$blockScrolling: true}}

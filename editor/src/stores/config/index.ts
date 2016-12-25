@@ -10,7 +10,7 @@ const {
     onComponentKit,
     createProject,
     writeCode,
-    onStarterTemplate,
+    onProjectFileRead,
     changeKit,
     installModule,
     onPackageInfo,
@@ -18,9 +18,15 @@ const {
     uninstallModule,
     onComponentKitInfo,
     installComponentKit,
-    uninstallComponentKit
+    uninstallComponentKit,
+    onProjectFileInfo,
+    createNewFile,
+    onFileRead,
+    readProjectFile,
+    deleteProjectFile
 } = require('../../../../lib/middleMan/client');
 import editorSessionStore from '../EditorSessionStore';
+import workspaceStore from '../WorkspaceStore';
 
 interface INotification {
     notificationType: 'success' | 'error';
@@ -68,8 +74,9 @@ export class ConfigStore {
             editorSessionStore.componentKit.setComponentKit(data);
         });
 
-        onStarterTemplate((code) => {
-            editorSessionStore.updateCode(code);
+        onProjectFileRead((code) => {
+            editorSessionStore.updateCode(code.content);
+            workspaceStore.setActiveFile(code.fileName);
         });
 
         onMessage((message) => {
@@ -106,6 +113,15 @@ export class ConfigStore {
             this.componentKitInfo.installedKits = data.installedKits;
             this.componentKitInfo.uninstalledKits = data.uninstalledKits;
         });
+
+        onProjectFileInfo((data) => {
+            workspaceStore.setFiles(data);
+        });
+
+        onFileRead((content) => {
+            editorSessionStore.setInitialContent(content.content);
+            workspaceStore.setActiveFile(content.fileName);
+        });
     }
 
     @action
@@ -116,7 +132,11 @@ export class ConfigStore {
 
     @action
     public writeCode = (content: string) => {
-        writeCode(content);
+        writeCode({
+            fileName: workspaceStore.activeFile,
+            content
+        });
+        editorSessionStore.setSavedCode();
     }
 
     @action
@@ -141,6 +161,21 @@ export class ConfigStore {
     public uninstallComponentKit = (name: string) => {
         this.isInProgress = true;
         uninstallComponentKit(name);
+    }
+
+    @action
+    public createFile = (name: string) => {
+        createNewFile(name);
+    }
+
+    @action
+    public readProjectFile = (name: string) => {
+        readProjectFile(name);
+    }
+
+    @action
+    public deleteProfileFile = (file: string) => {
+        deleteProjectFile(file);
     }
 
     @action

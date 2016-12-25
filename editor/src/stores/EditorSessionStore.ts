@@ -46,10 +46,13 @@ export class EditorSession {
     @observable public props: IEditorSessionComponentProps[];
     @observable public componentSearchText: string;
     @observable public dependencies: IPackageDependency;
+    @observable public lastSavedCode: string;
 
     constructor() {
         this.componentKit = new ComponentsKit();
         this.code = startSnippet;
+        this.lastSavedCode = startSnippet;
+        this.lastSavedCode = '';
         this.importDeclarations = [];
         this.highlightedNode = null;
         this.componentsMeta = null;
@@ -192,6 +195,28 @@ export class EditorSession {
             dependencies,
             devDependencies
         };
+    }
+
+    @action
+    public setSavedCode = () => {
+        this.lastSavedCode = this.code;
+    }
+
+    @action
+    public restoreLastSavedCode = () => {
+        this.code = this.lastSavedCode;
+    }
+
+    @action
+    public setInitialContent = (content: string) => {
+        this.code = content;
+        this.lastSavedCode = content;
+    }
+
+    @computed
+    public get IsDirty() {
+        console.log(this.lastSavedCode + ' ' + this.code);
+        return this.lastSavedCode !== this.code;
     }
 }
 

@@ -317,6 +317,10 @@ export function addOrUpdatePropertyOfReactComponent(
  * Retrives the value of a provided react component atrribute value depending on its type
  */
 export function getReactComponentAttributeValue(componentNode: any, propertyName: string, propType: string) {
+    if (!componentNode.openingElement) {
+        return;
+    }
+
     for (const attribute of componentNode.openingElement.attributes) {
         if (attribute.name.name === propertyName) {
             if (propType === componentPropType.string) {

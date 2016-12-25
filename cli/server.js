@@ -10,7 +10,11 @@ const {
   writeIndexFileContent,
   getStarterFileTemplate,
   cleanProjectDirectory,
-  writePackageJson
+  writePackageJson,
+  readProjectFiles,
+  createProjectFile,
+  readProjectFile,
+  deleteProjectFile
 } = require('../lib/fileHandler');
 const { initialize, onCreateProject } = require('../lib/middleMan/server');
 const {
@@ -41,26 +45,31 @@ initialize(serverApp, {
   onConnection: (socket) => {
     socket.emit('initialConfig', projectConfig);
     socket.emit('componentKit', require(projectConfig.activeComponentKit).kit);
-    socket.emit('starterTemplate', getStarterFileTemplate(projectConfig.activeComponentKit));
+    //socket.emit('projectFileRead', readProjectFile());
     socket.emit('packageInfo', readDependencies());
+    readProjectFiles().then((files) => {
+      socket.emit('projectFileInfo', files);
+    });
     request
       .get('http://localhost:3334/apis')
       .send()
       .set('Accept', 'application/json')
       .end((err, res) => {
-        availableComponentKits = JSON.parse(res.text);
-        socket.emit('componentKitInfo', getComponentKitDetails(readDependencies(), availableComponentKits));
+        if (!err) {
+          availableComponentKits = JSON.parse(res.text);
+          socket.emit('componentKitInfo', getComponentKitDetails(readDependencies(), availableComponentKits));
+        }
       });
   },
-  onCodeChange: (content) => {
-    console.log('code change........')
-    writeIndexFileContent(content);
+  onCodeChange: (data) => {
+    console.log(data);
+    writeIndexFileContent(data.fileName, data.content);
   },
   onKitChange: (kit, socket) => {
     changeActiveKit(kit);
     projectConfig = read();
     socket.emit('componentKit', require(projectConfig.activeComponentKit).kit);
-    socket.emit('starterTemplate', getStarterFileTemplate(projectConfig.activeComponentKit));
+    //socket.emit('projectFileRead', getStarterFileTemplate(projectConfig.activeComponentKit));
     cleanProjectDirectory();
     writePackageJson();
     writeIndexFile(require(projectConfig.activeComponentKit).starterFilePath);
@@ -130,6 +139,21 @@ initialize(serverApp, {
           message: 'Installation of ' + moduleName + ' failed'
         });
       });
+  },
+  onCreateNewFile: (fileName, socket) => {
+    createProjectFile(fileName);
+    readProjectFiles().then((files) => {
+      socket.emit('projectFileInfo', files);
+    });
+  },
+  onReadFile: (fileName, socket) => {
+    socket.emit('readProjectFile', readProjectFile(fileName));
+  },
+  onDeleteFile: (fileName, socket) => {
+    deleteProjectFile(fileName);
+    readProjectFiles().then((files) => {
+      socket.emit('projectFileInfo', files);
+    });
   }
 });
 

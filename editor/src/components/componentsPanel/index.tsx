@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import ComponentItem from './item';
 import ComponentMeta from '../../stores/ComponentMeta';
 
+
 interface IComponentPanelProps {
     components: ComponentMeta[];
     onDropped: (code: any) => void;
