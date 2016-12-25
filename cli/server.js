@@ -1,9 +1,6 @@
 const path = require('path');
 const express = require('express');
-const webpack = require('webpack');
-const webpackMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-//const config = require('./webpack.config.js');
+const webpackDevServerApp = require('./webpackServer');
 const {
   writeWebpackConfigFile,
   writeIndexFile,
@@ -37,18 +34,18 @@ let availableComponentKits = null;
 
 initialize(serverApp, {
   onCreateProject: (data) => {
-    console.log('ON CREATE PROJECT');
-    //writeWebpackConfigFile(projectConfig.activeComponentKit);
-    writePackageJson();
-    writeIndexFile(require(projectConfig.activeComponentKit).starterFilePath);
+    writePackageJson(projectConfig.activeComponentKit);
+    writeIndexFile(require(projectConfig.activeComponentKit).packageJsonPath);
   },
   onConnection: (socket) => {
     socket.emit('initialConfig', projectConfig);
     socket.emit('componentKit', require(projectConfig.activeComponentKit).kit);
-    //socket.emit('projectFileRead', readProjectFile());
     socket.emit('packageInfo', readDependencies());
     readProjectFiles().then((files) => {
-      socket.emit('projectFileInfo', files);
+      socket.emit('projectFileInfo', {
+        files: files,
+        entryFile: path.basename(require(projectConfig.activeComponentKit).starterFilePath)
+      });
     });
     request
       .get('http://localhost:3334/apis')
@@ -60,19 +57,25 @@ initialize(serverApp, {
           socket.emit('componentKitInfo', getComponentKitDetails(readDependencies(), availableComponentKits));
         }
       });
+    socket.emit('readProjectFile', readProjectFile(path.basename(require(projectConfig.activeComponentKit).starterFilePath)));
   },
   onCodeChange: (data) => {
-    console.log(data);
+    // TODO - change from index file content to just file content
     writeIndexFileContent(data.fileName, data.content);
   },
   onKitChange: (kit, socket) => {
+    cleanProjectDirectory();
     changeActiveKit(kit);
     projectConfig = read();
     socket.emit('componentKit', require(projectConfig.activeComponentKit).kit);
-    //socket.emit('projectFileRead', getStarterFileTemplate(projectConfig.activeComponentKit));
-    cleanProjectDirectory();
-    writePackageJson();
+    writePackageJson(projectConfig.activeComponentKit);
     writeIndexFile(require(projectConfig.activeComponentKit).starterFilePath);
+    readProjectFiles().then((files) => {
+      socket.emit('projectFileInfo', {
+        files: files,
+        entryFile: path.basename(require(projectConfig.activeComponentKit).starterFilePath)
+      });
+    });
   },
   onModuleInstall: (moduleName, socket) => {
     installModuleToProjectDirectory(moduleName)
@@ -143,7 +146,10 @@ initialize(serverApp, {
   onCreateNewFile: (fileName, socket) => {
     createProjectFile(fileName);
     readProjectFiles().then((files) => {
-      socket.emit('projectFileInfo', files);
+      socket.emit('projectFileInfo', {
+        files: files,
+        entryFile: path.basename(require(projectConfig.activeComponentKit).starterFilePath)
+      });
     });
   },
   onReadFile: (fileName, socket) => {
@@ -152,41 +158,16 @@ initialize(serverApp, {
   onDeleteFile: (fileName, socket) => {
     deleteProjectFile(fileName);
     readProjectFiles().then((files) => {
-      socket.emit('projectFileInfo', files);
+      socket.emit('projectFileInfo', {
+        files: files,
+        entryFile: path.basename(require(projectConfig.activeComponentKit).starterFilePath)
+      });
     });
   }
 });
 
-
-if (isDeveloping) {
-  const config = getWebpackConfig();
-  const compiler = webpack(config);
-  const middleware = webpackMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-    contentBase: '.',
-    stats: {
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: false,
-      chunkModules: false,
-      modules: false
-    }
-  });
-
-  app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
-  /* app.get('*', function response(req, res) {
-     console.log(path.join(__dirname, 'preview.html'));
-     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'preview.html')));
-     res.end();
-   });*/
-} else {
-  app.use(express.static(__dirname + '/dist'));
-  app.get('*', function response(req, res) {
-    res.sendFile(path.join(__dirname, 'preview.html'));
-  });
-}
+ const config = getWebpackConfig();
+ webpackDevServerApp(config);
 
 serverApp.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {

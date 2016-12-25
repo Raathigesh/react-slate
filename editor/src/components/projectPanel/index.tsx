@@ -10,6 +10,7 @@ interface IProjectPanelProps {
     onNodeClick: (fileName: string) => void;
     activeFileName: string;
     isActiveFileDirty: boolean;
+    entryFile: string;
     onDelete: (fileName: string) => void;
 }
 
@@ -67,12 +68,24 @@ export default class ProjectPanel extends React.Component<IProjectPanelProps, IP
 
         this.props.files.forEach((file, i) => {
             const isDirtyLabel = file === this.props.activeFileName && this.props.isActiveFileDirty ? '*' : '';
+            const secondaryLabel = this.props.entryFile === file ? (
+                <Tooltip content='Webpack entry file can not be deleted'>
+                        <span className='pt-icon-standard pt-icon pt-icon-lock'/>
+                </Tooltip>
+            ) : (
+                 <Tooltip content='Delete'>
+                        <span
+                            className='pt-icon-standard pt-icon pt-icon-small-cross'
+                            onClick={this.handleDelete.bind(this, file)}
+                        />
+                </Tooltip>
+            );
             nodes.childNodes.push({
                 id: file,
                 iconName: 'document',
                 label: `${file} ${isDirtyLabel}`,
                 isSelected: this.props.activeFileName === file,
-                secondaryLabel: <button type='button' className='pt-button pt-minimal pt-icon-small-cross' onClick={this.handleDelete.bind(this, file)} />
+                secondaryLabel
             });
         });
 

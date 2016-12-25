@@ -1,11 +1,20 @@
 {
-  "name": "react-slate-generated-project",
-  "version": "0.0.1",
+  "name": "react-slate-starter-kit",
+  "version": "1.0.0",
   "description": "",
-  "main": "",
-  "scripts": {},
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "author": "",
   "license": "ISC",
-  "devDependencies": {},
-  "dependencies": {}
+  "devDependencies": {
+    "html-webpack-plugin": "^2.24.1",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",    
+    "react-dom": "^15.4.1",    
+    "webpack-hot-middleware": "^2.13.2"
+  }
 }

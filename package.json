@@ -53,6 +53,7 @@
     "react-flexbox-grid": "^0.10.2",
     "react-router": "^2.5.2",
     "recast": "^0.11.17",
+    "server-destroy": "^1.0.1",
     "socket.io-client": "^1.5.1",
     "superagent": "^3.3.1",
     "webpack-dev-middleware": "^1.8.4",

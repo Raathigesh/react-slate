@@ -6,8 +6,7 @@ import * as React from 'react';
 import ComponentMeta from '../../../stores/ComponentMeta';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const { DragSource } = require('react-dnd');
-
-import './style.scss';
+import { ISnippet } from '../../../services/snippetService';
 
 const knightSource = {
     beginDrag(props) {
@@ -30,10 +29,10 @@ function collect(connect, monitor) {
 }
 
 interface IActionMiniProps {
-    detail: ComponentMeta;
+    detail: ISnippet;
     connectDragSource?: any;
     isDragging?: boolean;
-    onDropped?: (id: string) => void;
+    onDropped?: (detail: any) => void;
 }
 
 @DragSource('ACTION', knightSource, collect)

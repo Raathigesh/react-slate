@@ -6,10 +6,12 @@ import * as React from 'react';
 import ProjectPanel from '../projectPanel';
 import ComponentMeta from '../../stores/ComponentMeta';
 import ComponentsPanel from '../componentsPanel';
+import { ISnippet } from '../../services/snippetService';
 
 interface ILeftPanelProps {
     components: ComponentMeta[];
     onDropped: (code: any) => void;
+    onSnippetDropped: (code: string) => void;
     onSearchTextChange: (text: string) => void;
     searchText: string;
     files: string[];
@@ -17,6 +19,8 @@ interface ILeftPanelProps {
     activeFileName: string;
     isActiveFileDirty: boolean;
     onDelete: (fileName: string) => void;
+    entryFile: string;
+    snippets: ISnippet[];
 }
 
 export default class LeftPanel extends React.Component<ILeftPanelProps, {}> {
@@ -29,6 +33,7 @@ export default class LeftPanel extends React.Component<ILeftPanelProps, {}> {
                     activeFileName={this.props.activeFileName}
                     isActiveFileDirty={this.props.isActiveFileDirty}
                     onDelete={this.props.onDelete}
+                    entryFile={this.props.entryFile}
                 />
                 <ComponentsPanel
                     {...this.props}

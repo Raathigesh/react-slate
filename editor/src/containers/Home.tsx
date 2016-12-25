@@ -17,6 +17,7 @@ import { ConfigStore } from '../stores/config';
 import Notification from '../components/notification';
 import LeftPanel from '../components/leftPanel';
 import { WorkspaceStore } from '../stores/WorkspaceStore';
+import getSnippets from '../services/snippetService';
 import './style.scss';
 
 interface IHomeProps {
@@ -36,6 +37,10 @@ export default class Home extends React.Component<IHomeProps, {}> {
     public onComponentDroppedOnEditor = (detail: any) => {
         this.editor.handler.component.insertInCursor(this.props.editorSessionStore.getComponentSnippet(detail));
         this.props.editorSessionStore.addImport(detail.exported);
+    }
+
+    public onSnippetDroppedOnEditor = (code: string) => {
+        this.editor.handler.component.insertInCursor(code);
     }
 
     public render() {
@@ -66,6 +71,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                         <LeftPanel
                             components={editorSessionStore.filteredComponent}
                             onDropped={this.onComponentDroppedOnEditor}
+                            onSnippetDropped={this.onSnippetDroppedOnEditor}
                             searchText={editorSessionStore.componentSearchText}
                             onSearchTextChange={editorSessionStore.setFitlerText}
                             files={workspaceStore.files}
@@ -73,6 +79,8 @@ export default class Home extends React.Component<IHomeProps, {}> {
                             activeFileName={workspaceStore.activeFile}
                             isActiveFileDirty={editorSessionStore.IsDirty}
                             onDelete={configStore.deleteProfileFile}
+                            entryFile={workspaceStore.entryFile}
+                            snippets={getSnippets()}
                         />
                     </div>
                     <div className='col-md-7 editorPanel'>

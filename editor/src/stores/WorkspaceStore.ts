@@ -8,11 +8,13 @@ export class WorkspaceStore {
     @observable public files: string[];
     @observable public activeFile: string;
     @observable public mode: string;
+    @observable public entryFile: string;
 
     constructor() {
         this.files = observable([]);
         this.mode = 'jsx';
         this.activeFile = '';
+        this.entryFile = '';
     }
 
     @action
@@ -35,8 +37,13 @@ export class WorkspaceStore {
         this.activeFile = file;
     }
 
+    @action
+    public setEntryFile = (file: string) => {
+        this.entryFile = file;
+    }
+
     private getFileExtension(fileName: string) {
-        if (fileName.split('.').length < 1) {
+        if (fileName.split('.').length > 1) {
             return fileName.split('.')[1];
         }
 

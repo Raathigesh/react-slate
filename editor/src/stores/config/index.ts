@@ -115,7 +115,8 @@ export class ConfigStore {
         });
 
         onProjectFileInfo((data) => {
-            workspaceStore.setFiles(data);
+            workspaceStore.setFiles(data.files);
+            workspaceStore.setEntryFile(data.entryFile);
         });
 
         onFileRead((content) => {
@@ -176,6 +177,7 @@ export class ConfigStore {
     @action
     public deleteProfileFile = (file: string) => {
         deleteProjectFile(file);
+        readProjectFile(name);
     }
 
     @action
