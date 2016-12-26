@@ -8,7 +8,7 @@ UI kits such as Blueprint JS, Semantic UI React, React Toolbox easy and fun. The
 through installable npm packages called component kits. Also React slate could be used to quickly try out
 react libraries and ideas rather than spending time on setting up the tools.
 
-### What can I take a look at this thing?
+### When can I take a look at this thing?
 I made good progress so far with the initial version. There will be an initial release real sooon.
 
 ### Credits
