@@ -1,6 +1,6 @@
-<h2 align="center">
+<h3 align="center">
   <img src="./docs/assets/ReactSlateLogo.png" alt="Atmo" height="300">
-</h2>
+</h3>
 
 ## What is React Slate?
 React slate is an interactive playground for your React JS experiments. React slate makes exploring
