@@ -64,6 +64,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                       onComponentInstall={configStore.installComponentKit}
                       onComponentUnInstall={configStore.uninstallComponentKit}
                       onCreateFile={configStore.createFile}
+                      webpackPort={configStore.webpackPort}
                     />
                 </div>
                 <div className='row' style={{marginTop: '60px'}}>

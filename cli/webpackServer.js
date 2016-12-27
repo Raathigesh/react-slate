@@ -8,11 +8,8 @@ const enableDestroy = require('server-destroy');
 let app = null;
 let serverApp = null;
 
-function createWebpackDevServer(config) {
-    const port = 4000;
-
+function createWebpackDevServer(config, port) {
     serverApp && serverApp.destroy();
-
     app = express();
     serverApp = require('http').Server(app);
 
@@ -41,7 +38,6 @@ function createWebpackDevServer(config) {
     });
 
     enableDestroy(serverApp);
-
     return serverApp;
 }
 

@@ -26,7 +26,7 @@ interface ILeftPanelProps {
 export default class LeftPanel extends React.Component<ILeftPanelProps, {}> {
     public render() {
         return (
-            <div className='pt-card' style={{ height: '100%' }}>
+            <div className='pt-card' style={{ height: '100%', padding: '0px' }}>
                 <ProjectPanel
                     files={this.props.files}
                     onNodeClick={this.props.onNodeClick}

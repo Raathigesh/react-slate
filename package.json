@@ -60,7 +60,7 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "devDependencies": {
-    "@blueprintjs/core": "^1.0.1",
+    "@blueprintjs/core": "^1.4.0",
     "@types/node": "^6.0.46",
     "@types/react": "^0.14.47",
     "@types/react-addons-css-transition-group": "^0.14.17",

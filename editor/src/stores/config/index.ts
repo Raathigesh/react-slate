@@ -23,7 +23,8 @@ const {
     createNewFile,
     onFileRead,
     readProjectFile,
-    deleteProjectFile
+    deleteProjectFile,
+    onWebpackDetail
 } = require('../../../../lib/middleMan/client');
 import editorSessionStore from '../EditorSessionStore';
 import workspaceStore from '../WorkspaceStore';
@@ -49,11 +50,13 @@ export class ConfigStore {
             label: string;
         }[]
     };
+    @observable public webpackPort: number;
 
     constructor() {
         this.installedComponentKits = observable([]);
         this.activeComponentKit = new ComponentKitConfig('', '', '');
         this.isInProgress = false;
+        this.webpackPort = 0;
         this.notification = {
             notificationType: 'success',
             message: ''
@@ -123,6 +126,10 @@ export class ConfigStore {
             editorSessionStore.setInitialContent(content.content);
             workspaceStore.setActiveFile(content.fileName);
         });
+
+        onWebpackDetail((port) => {
+            this.webpackPort = port;
+        });
     }
 
     @action
@@ -166,7 +173,14 @@ export class ConfigStore {
 
     @action
     public createFile = (name: string) => {
-        createNewFile(name);
+        if (workspaceStore.isFileValid(name)) {
+            createNewFile(name);
+        } else {
+            this.notification = {
+                message: 'There is already a file exists with that name.',
+                notificationType: 'error'
+            };
+        }
     }
 
     @action

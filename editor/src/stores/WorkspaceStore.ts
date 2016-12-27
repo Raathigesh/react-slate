@@ -27,6 +27,8 @@ export class WorkspaceStore {
         const extension = this.getFileExtension(this.activeFile);
         if (extension === 'jsx') {
             return 'jsx';
+        } else if (extension === 'html') {
+            return 'html';
         } else {
             return 'javascript';
         }
@@ -40,6 +42,16 @@ export class WorkspaceStore {
     @action
     public setEntryFile = (file: string) => {
         this.entryFile = file;
+    }
+
+    public isFileValid = (fileName: string) => {
+        for (const file of this.files) {
+            if (file.toLowerCase() === fileName.toLowerCase()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private getFileExtension(fileName: string) {

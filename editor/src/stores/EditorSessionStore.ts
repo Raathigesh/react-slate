@@ -7,7 +7,6 @@ import { observable, action, computed } from 'mobx';
 const recast = require('recast');
 import ComponentsKit from './ComponentsKit';
 import ComponentMeta, { IComponentExport, IComponentProp } from './ComponentMeta';
-import startSnippet from './startSnippet';
 import {
     getAllImportDeclarations,
     findNodeInEditorPosition,
@@ -50,8 +49,8 @@ export class EditorSession {
 
     constructor() {
         this.componentKit = new ComponentsKit();
-        this.code = startSnippet;
-        this.lastSavedCode = startSnippet;
+        this.code = '';
+        this.lastSavedCode = '';
         this.lastSavedCode = '';
         this.importDeclarations = [];
         this.highlightedNode = null;

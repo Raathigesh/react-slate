@@ -33,6 +33,7 @@ interface INavBarProps {
     onComponentInstall: (name: string) => void;
     onComponentUnInstall: (name: string) => void;
     onCreateFile: (name: string) => void;
+    webpackPort: number;
 }
 
 interface INavBarState {
@@ -189,6 +190,10 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
         this.fileNameInput.value = '';
     }
 
+    public handlePreviewLinkClick = () => {
+
+    }
+
     public render() {
         const componentKitList = (
             <ul className='pt-menu pt-elevation-1'>
@@ -258,10 +263,13 @@ class NavBar extends React.Component<INavBarProps, INavBarState> {
                 </div>
                 <div className='pt-navbar-group pt-align-right'>
                     <AnchorButton
-                        text='http://localhost:9000'
+                        text={`http://localhost:${this.props.webpackPort}`}
                         iconName='pt-icon-application'
                         className='pt-minimal'
-                        />
+                        onClick={this.handlePreviewLinkClick}
+                        href={`http://localhost:${this.props.webpackPort}`}
+                        target='_blank'
+                    />
                     <span className='pt-navbar-divider' />
                     <Popover
                         content={this.getPreferenceComponentContent()}

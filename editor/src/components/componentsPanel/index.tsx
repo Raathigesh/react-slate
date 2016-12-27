@@ -8,6 +8,7 @@ import ComponentItem from './item';
 import SnippetItem from './snippetItem';
 import ComponentMeta from '../../stores/ComponentMeta';
 import { ISnippet } from '../../services/snippetService';
+import './style.scss';
 
 interface IComponentPanelProps {
     components: ComponentMeta[];
@@ -45,7 +46,7 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
         });
 
         return (
-            <div className='pt-card' style={{ height: '100%' }}>
+            <div className='pt-card' style={{ height: '100%', padding: '15px' }}>
                 <div className='pt-input-group' style={{ marginBottom: '10px' }}>
                     <span className='pt-icon pt-icon-search' />
                     <input
@@ -57,7 +58,9 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
                         value={this.props.searchText}
                     />
                 </div>
+                <div className='components-header'>Snippets</div>
                 {snippets}
+                <div className='components-header'>Components from the kit</div>
                 {components}
             </div>
         );
