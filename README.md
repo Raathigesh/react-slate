@@ -11,9 +11,7 @@ Also React slate could be used to quickly try out react libraries and ideas rath
 I made good progress so far with the initial version. There will be an initial release real sooon.
 
 ### Well, Here is an early preview
-<h3 align="center">
-  <img src="./docs/assets/Preview.PNG" alt="Atmo" height="450">
-</h3>
+[Preview](https://raw.githubusercontent.com/Raathigesh/react-slate/master/docs/assets/Preview.PNG)
 
 
 ### Credits
