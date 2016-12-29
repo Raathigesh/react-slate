@@ -86,7 +86,7 @@ function emitCurrentProjectFiles(socket) {
     readProjectFiles().then((files) => {
         socket.emit('projectFileInfo', {
             files: files,
-            entryFile: path.basename(currentComponentKit.starterFilePath)
+            entryFile: path.basename(currentComponentKit.entryFilePath)
         });
     });
 }
@@ -108,6 +108,7 @@ function initializeMessageHandler(serverApp) {
          */
         onConnection: (socket) => {
             socket.emit('initialConfig', projectConfig);
+            console.log(currentComponentKit.kit)
             socket.emit('componentKit', currentComponentKit.kit);
             socket.emit('packageInfo', readDependencies());
             socket.emit('webpackDetail', webpackDevServerPort);
@@ -119,7 +120,7 @@ function initializeMessageHandler(serverApp) {
                         socket.emit('componentKitInfo', getComponentKitDetails(readDependencies(), availableComponentKits));
                     }
                 });
-            socket.emit('readProjectFile', readProjectFile(path.basename(currentComponentKit.starterFilePath)));
+            socket.emit('readProjectFile', readProjectFile(path.basename(currentComponentKit.entryFilePath)));
         },
 
         /**
@@ -138,7 +139,7 @@ function initializeMessageHandler(serverApp) {
             readProjectFiles().then((files) => {
                 socket.emit('projectFileInfo', {
                     files: files,
-                    entryFile: path.basename(currentComponentKit.starterFilePath)
+                    entryFile: path.basename(currentComponentKit.entryFilePath)
                 });
             });
             createWebpackDevServer(getWebpackConfig(), webpackDevServerPort);

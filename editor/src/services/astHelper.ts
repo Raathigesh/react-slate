@@ -310,6 +310,27 @@ export function addOrUpdatePropertyOfReactComponent(
                 }
             });
         }
+    } else if (propType === componentPropType.number) {
+        if (attr) {
+            attr.value.expression.value = value;
+            attr.value.raw = '\"' + value + '\"';
+        } else {
+            componentNode.openingElement.attributes.push({
+                type: 'JSXAttribute',
+                name: {
+                    type: 'JSXIdentifier',
+                    name: propertyName
+                },
+                value: {
+                    type: 'JSXExpressionContainer',
+                    expression: {
+                        type: 'Literal',
+                        value,
+                        raw: '\"' + value + '\"'
+                    }
+                }
+            });
+        }
     }
 }
 
@@ -326,6 +347,8 @@ export function getReactComponentAttributeValue(componentNode: any, propertyName
             if (propType === componentPropType.string) {
                 return attribute.value.value;
             } else if (propType === componentPropType.boolean) {
+                return attribute.value.expression.value;
+            } else if (propType === componentPropType.number) {
                 return attribute.value.expression.value;
             }
         }

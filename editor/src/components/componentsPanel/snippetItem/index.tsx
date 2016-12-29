@@ -42,9 +42,10 @@ export default class ComponentItem extends React.Component<IActionMiniProps, {}>
         return connectDragSource(
             <div
                 className='pt-card pt-elevation-0 pt-interactive slate-component-item'
-                style={{height: '65px', padding: '11px'}}
+                style={{height: '65px', padding: '11px', marginBottom: '5px', marginRight: '5px', marginLeft: '5px'}}
             >
                 <h6>
+                    <span className='pt-icon pt-icon-code' />{' '}
                     {this.props.detail.name}
                 </h6>
                 <p>{this.props.detail.description}</p>

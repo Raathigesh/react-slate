@@ -32,21 +32,34 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
     }
 
     public render() {
-        const components = this.props.components.map(component => {
-            return <ComponentItem detail={component} onDropped={this.props.onDropped} />;
+        const components = this.props.components
+        .filter(item => {
+            if (item.isVisibleInComponentPanel === undefined) {
+                return true;
+            }
+
+            return item.isVisibleInComponentPanel;
+        })
+        .map(component => {
+            return (
+                <ComponentItem
+                    detail={component}
+                    onDropped={this.props.onDropped}
+                />
+            );
         });
 
         const snippets = this.props.snippets.map(snippet => {
             return (
                 <SnippetItem
-                        detail={snippet}
-                        onDropped={this.handleSnippetDrop}
+                    detail={snippet}
+                    onDropped={this.handleSnippetDrop}
                 />
             );
         });
 
         return (
-            <div className='pt-card' style={{ height: '100%', padding: '15px' }}>
+            <div className='pt-card' style={{ height: '100%', padding: '10px' }}>
                 <div className='pt-input-group' style={{ marginBottom: '10px' }}>
                     <span className='pt-icon pt-icon-search' />
                     <input
@@ -58,10 +71,12 @@ export default class ComponentsPanel extends React.Component<IComponentPanelProp
                         value={this.props.searchText}
                     />
                 </div>
-                <div className='components-header'>Snippets</div>
-                {snippets}
-                <div className='components-header'>Components from the kit</div>
-                {components}
+                <div style={{height: '75vh', overflow: 'auto'}}>
+                    <div className='components-header'>Snippets</div>
+                    {snippets}
+                    <div className='components-header'>Components from the kit</div>
+                    {components}
+                </div>
             </div>
         );
     }

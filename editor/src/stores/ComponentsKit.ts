@@ -33,8 +33,8 @@ export default class ComponentsKit {
         for (const compoMeta of this.components) {
             const exportType = importStatementMeta.isDefault ? 'default' : 'named';
             if (
-                compoMeta.exported.identifier === importStatementMeta.componentName
-                && compoMeta.exported.exportType === exportType
+                compoMeta.exported && compoMeta.exported.identifier === importStatementMeta.componentName
+                && compoMeta.exported &&compoMeta.exported.exportType === exportType
             ) {
                 return compoMeta;
             }

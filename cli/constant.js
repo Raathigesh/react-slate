@@ -1,3 +1,3 @@
 module.exports = {
-    availableComponentKitsUrl: 'http://localhost:3334/apis'
+    availableComponentKitsUrl: 'https://rawgit.com/Raathigesh/react-slate/master/componentKits.json'
 };

@@ -2,7 +2,7 @@
  * Editor session
  */
 
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, isObservableArray } from 'mobx';
 // tslint:disable-next-line:no-require-imports no-var-requires no-require-imports
 const recast = require('recast');
 import ComponentsKit from './ComponentsKit';
@@ -17,6 +17,7 @@ import {
 import componentPropsTypes from '../services/componentPropType';
 import { Model as TextModel } from './../knobs/text';
 import { Model as BooleanModel } from './../knobs/boolean';
+import { Model as NumberModel } from './../knobs/number';
 
 export interface IEditorSessionComponentProps extends IComponentProp {
     model: any;
@@ -86,9 +87,23 @@ export class EditorSession {
     }
 
     @action
-    public addImport = (componentExport: IComponentExport) => {
+    public addImport = (componentExport: IComponentExport | IComponentExport[]) => {
         this.generateAst();
-        addImportStatementForComponent(componentExport, componentExport.moduleName, this.ast);
+        if (isObservableArray(componentExport)) {
+            for (let ex of (<IComponentExport[]>componentExport)) {
+                addImportStatementForComponent(
+                    <IComponentExport>ex,
+                    (<IComponentExport>ex).moduleName,
+                    this.ast
+                );
+            }
+        } else {
+            addImportStatementForComponent(
+                <IComponentExport>componentExport,
+                (<IComponentExport>componentExport).moduleName,
+                this.ast
+            );
+        }
         this.regenerateCode();
     }
 
@@ -133,6 +148,8 @@ export class EditorSession {
                 model = new TextModel(prop.name, this.componentNode);
             } else if (prop.propType === componentPropsTypes.boolean) {
                 model = new BooleanModel(prop.name, this.componentNode);
+            } else if (prop.propType === componentPropsTypes.number) {
+                model = new NumberModel(prop.name, this.componentNode);
             }
 
             const propWithModel = {

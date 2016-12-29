@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { IEditorSessionComponentProps } from '../../stores/EditorSessionStore';
 import {Component as TextKnob} from '../../knobs/text';
 import {Component as BooleanKnob} from '../../knobs/boolean';
+import {Component as NumberKnob} from '../../knobs/number';
 import componentPropTypes from '../../services/componentPropType';
 
 
@@ -25,6 +26,8 @@ export default class Row extends React.Component<IRowProps, {}> {
             knob = <TextKnob model={this.props.componentProps.model} onChange={this.props.onChange} />;
         } else if (this.props.componentProps.propType === componentPropTypes.boolean) {
             knob = <BooleanKnob model={this.props.componentProps.model} onChange={this.props.onChange} />;
+        } else if (this.props.componentProps.propType === componentPropTypes.number) {
+            knob = <NumberKnob model={this.props.componentProps.model} onChange={this.props.onChange} />;
         }
 
         return (

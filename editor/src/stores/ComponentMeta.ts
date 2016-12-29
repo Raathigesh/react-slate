@@ -23,7 +23,10 @@ export default class ComponentMeta {
     @observable public description: string;
     @observable public props: IComponentProp[];
     @observable public exported: IComponentExport;
+    @observable public snippet?: string;
     @observable public children?: ComponentMeta[];
+    @observable public documentationUrl?: string;
+    @observable public isVisibleInComponentPanel: boolean;
 
     constructor() {
         this.props = [];

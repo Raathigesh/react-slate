@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SplitByPathPlugin = require('webpack-split-by-path');
 const DashboardPlugin = require('webpack-dashboard/plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const sourceMap = process.env.TEST || process.env.NODE_ENV !== 'production'
   ? [new webpack.SourceMapDevToolPlugin({ filename: null, test: /\.tsx?$/ })]
@@ -21,6 +22,9 @@ const basePlugins = [
     inject: 'body',
   }),
   new webpack.NoErrorsPlugin(),
+  new CopyWebpackPlugin([
+    { from: './editor/src/favicon.png' },
+  ]),
 ].concat(sourceMap);
 
 const devPlugins = [

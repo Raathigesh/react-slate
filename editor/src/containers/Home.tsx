@@ -35,7 +35,11 @@ export default class Home extends React.Component<IHomeProps, {}> {
     public editor: any;
 
     public onComponentDroppedOnEditor = (detail: any) => {
-        this.editor.handler.component.insertInCursor(this.props.editorSessionStore.getComponentSnippet(detail));
+        if (detail.snippet) {
+            this.editor.handler.component.insertInCursor(detail.snippet);
+        } else {
+            this.editor.handler.component.insertInCursor(this.props.editorSessionStore.getComponentSnippet(detail));
+        }
         this.props.editorSessionStore.addImport(detail.exported);
     }
 
@@ -67,7 +71,7 @@ export default class Home extends React.Component<IHomeProps, {}> {
                       webpackPort={configStore.webpackPort}
                     />
                 </div>
-                <div className='row' style={{marginTop: '60px'}}>
+                <div className='row' style={{marginTop: '50px'}}>
                     <div className='col-md-2 componentPanel'>
                         <LeftPanel
                             components={editorSessionStore.filteredComponent}

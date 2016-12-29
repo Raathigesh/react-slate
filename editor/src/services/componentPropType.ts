@@ -4,5 +4,6 @@
 
 export default {
     string: 'string',
-    boolean: 'boolean'
+    boolean: 'boolean',
+    number: 'number'
 };
