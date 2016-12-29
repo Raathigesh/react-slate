@@ -10,5 +10,11 @@ Also React slate could be used to quickly try out react libraries and ideas rath
 ### When can I take a look at this thing?
 I made good progress so far with the initial version. There will be an initial release real sooon.
 
+### Well, Here is an early preview
+<h3 align="center">
+  <img src="./docs/assets/Preview.PNG" alt="Atmo" height="400">
+</h3>
+
+
 ### Credits
 Icon made by [Freepik](http://www.freepik.com/) from www.flaticon.com 
