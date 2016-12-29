@@ -12,7 +12,7 @@ I made good progress so far with the initial version. There will be an initial r
 
 ### Well, Here is an early preview
 <h3 align="center">
-  <img src="./docs/assets/Preview.PNG" alt="Atmo" height="400">
+  <img src="./docs/assets/Preview.PNG" alt="Atmo" height="450">
 </h3>
 
 
