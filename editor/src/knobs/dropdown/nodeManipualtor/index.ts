@@ -7,13 +7,13 @@ import { addOrUpdatePropertyOfReactComponent, getReactComponentAttributeValue } 
 import componentPropType from '../../../services/componentPropType';
 
 export default function(model: BooleanKnobModel, node) {
-    node.value.expression.value = model.isTrue;
+    node.value.expression.value = model.selectedOption;
 }
 
 export function getInitialValue(node, propName) {
-    return getReactComponentAttributeValue(node, propName, componentPropType.boolean);
+    return getReactComponentAttributeValue(node, propName, componentPropType.string);
 }
 
 export function update(propName: string, value: any, node: any) {
-    addOrUpdatePropertyOfReactComponent(node, propName, value, componentPropType.boolean);
+    addOrUpdatePropertyOfReactComponent(node, propName, value, componentPropType.string);
 }

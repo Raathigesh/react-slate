@@ -5,7 +5,7 @@ const loaders = require('./webpack/loaders');
 const plugins = require('./webpack/plugins');
 
 const applicationEntries = process.env.NODE_ENV === 'development'
-  ? [ 'webpack-hot-middleware/client?reload=true' ]
+  ? [ ]
   : [ ];
 
 module.exports = {

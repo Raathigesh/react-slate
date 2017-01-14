@@ -52,7 +52,9 @@ export default class ComponentItem extends React.Component<IActionMiniProps, {}>
                         {' '}{this.props.detail.name}
                     </a>
                 </h6>
-                <p>{this.props.detail.description}</p>
+                <p className='slate-component-description' title={this.props.detail.description}>
+                    {this.props.detail.description}
+                </p>
             </div>
         );
     }

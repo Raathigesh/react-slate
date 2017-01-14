@@ -18,7 +18,7 @@ import componentPropsTypes from '../services/componentPropType';
 import { Model as TextModel } from './../knobs/text';
 import { Model as BooleanModel } from './../knobs/boolean';
 import { Model as NumberModel } from './../knobs/number';
-
+import { Model as DropdownModel } from './../knobs/dropdown';
 export interface IEditorSessionComponentProps extends IComponentProp {
     model: any;
 }
@@ -90,7 +90,7 @@ export class EditorSession {
     public addImport = (componentExport: IComponentExport | IComponentExport[]) => {
         this.generateAst();
         if (isObservableArray(componentExport)) {
-            for (let ex of (<IComponentExport[]>componentExport)) {
+            for (const ex of (<IComponentExport[]>componentExport)) {
                 addImportStatementForComponent(
                     <IComponentExport>ex,
                     (<IComponentExport>ex).moduleName,
@@ -118,6 +118,7 @@ export class EditorSession {
         this.highlightedNode = nodeInPositionWithParent.node;
         this.highlightedNodeParent = nodeInPositionWithParent.parentNode;
         this.componentNode = nodeInPositionWithParent.componentNode;
+        console.log('Current Component ' + this.componentNode);
         this.importDeclarations = getAllImportDeclarations(this.ast);
         const declaration = findImportDeclartionOfComponent(
             this.highlightedNode,
@@ -150,6 +151,8 @@ export class EditorSession {
                 model = new BooleanModel(prop.name, this.componentNode);
             } else if (prop.propType === componentPropsTypes.number) {
                 model = new NumberModel(prop.name, this.componentNode);
+            } else if (prop.propType === componentPropsTypes.options) {
+                model = new DropdownModel(prop.name, this.componentNode, prop.options);
             }
 
             const propWithModel = {
@@ -157,6 +160,7 @@ export class EditorSession {
                 propType: prop.propType,
                 defaultValue: prop.defaultValue,
                 required: prop.required,
+                description: prop.description,
                 model
             };
 

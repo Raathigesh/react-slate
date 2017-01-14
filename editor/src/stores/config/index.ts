@@ -67,10 +67,11 @@ export class ConfigStore {
         };
         initialize('http://localhost:3000');
         onInitialConfig((data) => {
-           for (const kit of data.installedComponentKits) {
-               this.installedComponentKits.push(new ComponentKitConfig(kit.name, kit.label, kit.version));
-           }
-           this.activeComponentKit = this.getComponentKitByKey(data.activeComponentKit);
+            this.installedComponentKits = [];
+            for (const kit of data.installedComponentKits) {
+                this.installedComponentKits.push(new ComponentKitConfig(kit.name, kit.label, kit.version));
+            }
+            this.activeComponentKit = this.getComponentKitByKey(data.activeComponentKit);
         });
 
         onComponentKit((data) => {
@@ -196,11 +197,11 @@ export class ConfigStore {
 
     @action
     private getComponentKitByKey = (componentKey: string) => {
-         for (const kit of this.installedComponentKits) {
-             if (kit.name === componentKey) {
-                 return kit;
-             }
-         }
+        for (const kit of this.installedComponentKits) {
+            if (kit.name === componentKey) {
+                return kit;
+            }
+        }
     }
 }
 

@@ -9,7 +9,8 @@ const {
     readProjectFiles,
     createProjectFile,
     readProjectFile,
-    deleteProjectFile
+    deleteProjectFile,
+    copyFilesToProjectDirectory
 } = require('../lib/fileHandler');
 const {
     initialize,
@@ -31,7 +32,7 @@ const createWebpackDevServer = require('./webpackServer');
 
 let availableComponentKits = null;
 const webpackDevServerPort = 4000;
-const projectConfig = readProjectConfig();
+let projectConfig = readProjectConfig();
 const currentComponentKit = require(projectConfig.activeComponentKit);
 
 /**
@@ -39,7 +40,8 @@ const currentComponentKit = require(projectConfig.activeComponentKit);
  */
 function writeFreshProjectToProjectDirectory() {
     writePackageJson(projectConfig.activeComponentKit);
-    writeIndexFile(currentComponentKit.packageJsonPath);
+    writeIndexFile(currentComponentKit.entryFilePath);
+    copyFilesToProjectDirectory(currentComponentKit.files);
 }
 
 /**
@@ -50,7 +52,7 @@ function changeCurrentComponentKit(nameOfNewKit) {
     cleanProjectDirectory();
 
     // change the project config file with the new component kit name
-    changeActiveKit(kit);
+    changeActiveKit(nameOfNewKit);
 
     // read the project config file again after change
     projectConfig = readProjectConfig();

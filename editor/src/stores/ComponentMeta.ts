@@ -15,6 +15,11 @@ export interface IComponentProp {
     propType: string;
     defaultValue: string | boolean;
     required?: boolean;
+    options?: {
+        label: string;
+        value: string;
+    }[];
+    description?: string;
 }
 
 export default class ComponentMeta {

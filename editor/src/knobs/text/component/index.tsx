@@ -24,7 +24,7 @@ export default class Text extends React.Component<ITextKnobProp, {}> {
                 type='text'
                 placeholder='Text input'
                 dir='auto'
-                value={this.props.model.text}
+                value={this.props.model.text || ''}
                 onChange={this.handleChange}
             />
         );

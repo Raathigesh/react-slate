@@ -5,5 +5,6 @@
 export default {
     string: 'string',
     boolean: 'boolean',
-    number: 'number'
+    number: 'number',
+    options: 'options'
 };
