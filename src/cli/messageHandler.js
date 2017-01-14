@@ -31,7 +31,6 @@ const { getProjectDirectory } = require('../lib/locationService');
 const createWebpackDevServer = require('./webpackServer');
 
 let availableComponentKits = null;
-const webpackDevServerPort = 4000;
 let projectConfig = readProjectConfig();
 const currentComponentKit = require(projectConfig.activeComponentKit);
 
@@ -96,7 +95,7 @@ function emitCurrentProjectFiles(socket) {
 /**
  * Initializes the messaging handlers and start webpack dev server
  */
-function initializeMessageHandler(serverApp) {
+function initializeMessageHandler(serverApp, webpackDevServerPort) {
     initialize(serverApp, {
         /**
          * When a project is newly created

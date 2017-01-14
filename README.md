@@ -7,11 +7,33 @@ React slate is an interactive playground for your React JS experiments. React sl
 
 Also React slate could be used to quickly try out react libraries and ideas rather than spending time on setting up the tools.
 
-### When can I take a look at this thing?
-I made good progress so far with the initial version. There will be an initial release real sooon.
+## Installation
+```
+npm install react-slate -g ## Not yet available in npm
+```
 
-### Well, Here is an early screenshot
-[Screenshot](https://raw.githubusercontent.com/Raathigesh/react-slate/master/docs/assets/Preview.PNG)
+## Usage
+Execute the following comamnd
+```
+slate
+```
+
+### Options
+- `--port` will change the port of the slate UI server
+- `--webpackPort` will launch the webpack dev server with the specified port
+
+### Developement Guide
+#### Starting webpack dev server
+```shell
+cd ./editor
+npm start
+```
+
+#### Starting API server
+```shell
+cd ./cli
+node server.js
+```
 
 
 ### Credits
