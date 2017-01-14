@@ -1,0 +1,7 @@
+{
+    "componentKits": [{
+        "name": "blueprint-js-component-kit",
+        "label": "Blueprint JS",
+        "version": "1.0.0"
+    }]
+}
