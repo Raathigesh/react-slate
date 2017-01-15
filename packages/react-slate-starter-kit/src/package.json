@@ -1,7 +1,7 @@
 {
   "name": "react-slate-starter-kit",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Simple react starter kit for react-slate",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
