@@ -1,2 +1,4 @@
 packages/react-slate-starter-kit/node_modules/
 packages/react-slate-blueprint-js-kit/node_modules/
+packages/react-slate-blueprint-js-kit/src/node_modules/
+packages/react-slate-starter-kit/src/node_modules/
